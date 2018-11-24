@@ -1,6 +1,6 @@
 package fii.ai.natural.language.service;
 
-import fii.ai.natural.language.model.Move;
+import fii.ai.natural.language.input.Move;
 
 import java.util.List;
 

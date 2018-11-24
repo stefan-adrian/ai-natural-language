@@ -81,8 +81,8 @@ In ceea ce priveste protocolul de intrare, lucrurile sunt putin mai complicate.
 O sa detaliez mai mult depsre asta. Deocamdata vorbim despre structra 
 fundamentala.
 
-Pentru input cred ca trebuie sa folosim json sau xml (cum preferati). 
-Eu cred ca json este ok, dar cine implementeaza serviciul trebuie sa spuna 
+Pentru input cred ca trebuie sa folosim json. Eu cred ca json este ok, 
+dar cine implementeaza serviciul trebuie sa spuna 
 cum ii este mai bine. Voi presupune ca este json. 
 
 Apoi pentru a codifica continutul cred ca trebuie sa folosim chestii 
@@ -95,4 +95,67 @@ Exemplu de standarde:
 * PGN [Wikipedia page for PGN](https://en.wikipedia.org/wiki/Portable_Game_Notation)
 
 
-**TODO:** o sa continui astazi, e ceva de scris
+Pentru descrierea formatului am creat niste clase in pachetul: `fii.ai.natural.language.input`. 
+Ele sunt urmatoarele:
+
+* **InputTree** este clasa care descrie complet inputul. Contine pozitia principala, varianta principala daca exista)
+si variantele initiale daca acestea exista)
+* **InputVariant** reprezinta o varianta. O varianta este o lista de mutari unde prima mutare 
+este o alternativa la mutarea sau pozitia curenta. O varianta poate avea subvariante. 
+Posibilele subvariante sunt atasate fiecarei mutari
+* **InputNode** reprezinta o mutare. O mutare este descrisa prin numarul si culoarea celui 
+care face mutarea, notarea mutar proriu zise, scorul evaluat al pozitiei daca mutarea
+ar fi efectuata, variante alternative la mutare.
+
+Clasele pe care le-am scris nu contin decat campuri private. Ele trebuie
+decorate cu getters si setters si apoi folosite cu un Jackson sau ceva alternativ 
+pentru a fi serializate/deserializate in format json.
+
+**Observatie:**
+
+Este de preferat ca aceste clase sa fie folosite numai pentru a citi inputul. 
+Nu este indicat pentru a fi extinse si folosite la calculele si interpretarile 
+noastre chiar daca este tentant. Motivul este acela ca pentru calculele noastre
+cel mai probabil vom stoca informatia in clase diferit, pentru a raspunde 
+diverselor nevoi si in consecinta unele informatii vor ajunge sa fie redundanta
+in diverse campuri. Asta ar crea problema sincronizarii informatiei.
+
+## Scenarii si exemple aproximatve pentru fisierul de intrare
+
+O pozitie initiala si variantele posibile de mutari din acea pozitie:
+
+```json
+{
+  "initialPositionFEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  "variants" : [
+    [ {"move":"1. e2e4","score":0.01}, {"move":"1... e7e5","score":0.005} ],
+    [ {"move":"1. d2d4","score":0.01}, {"move":"1... g8f6","score":0.0},{"move":"2. c2c4","score":0.01} ]
+  ] 
+}
+```
+
+Un joc cu mutari alternative:
+
+```json
+{
+  "initialPositionFEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  "mainVariant": [
+    {
+      "move":"1. e2e4","score":0.01,
+      "variants": [
+        [ {"move":"1. d2d4","score":0.01}, {"move":"1... g8f6","score":0.0} ],
+        [ {"move":"1. c2c4","score":0}, {"move":"1... g8f6","score":0.01} ]
+      ]
+    },
+    {
+      "move":"1... e7e5","score":0.01,
+      "variants": [
+        [ {"move":"1... f7f5","score":0.1} ],
+        [ {"move":"1... c7c6","score":0.01},{"move":"2. d2d4","score":0.01} ]
+      ]
+    }
+  ]
+}
+```
+
+cele de mai sus sunt exemple, dar cam asa le vad eu.

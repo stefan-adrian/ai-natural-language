@@ -1,6 +1,6 @@
 package fii.ai.natural.language.controller;
 
-import fii.ai.natural.language.model.Move;
+import fii.ai.natural.language.input.Move;
 import fii.ai.natural.language.service.MoveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package fii.ai.natural.language.model;
+package fii.ai.natural.language.input;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

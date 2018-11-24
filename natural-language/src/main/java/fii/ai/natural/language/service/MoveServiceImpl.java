@@ -1,6 +1,6 @@
 package fii.ai.natural.language.service;
 
-import fii.ai.natural.language.model.Move;
+import fii.ai.natural.language.input.Move;
 import fii.ai.natural.language.repository.MoveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
