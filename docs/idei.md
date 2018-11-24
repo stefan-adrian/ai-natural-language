@@ -159,3 +159,106 @@ Un joc cu mutari alternative:
 ```
 
 cele de mai sus sunt exemple, dar cam asa le vad eu.
+
+## Functionalitatea
+
+Deci avem ca input un arbore cu variante si ca output un text. Cum ar trebui sa arate acest text?
+O varianta la care ma gandesc este in genul comentariilor unei partide de sah. 
+
+Un exemplu:
+
+```text
+1.c4 e6 2.Nc3 Nf6 3.e4 c5 
+    (Since 4.e5 did not seem to be dangerous.) 
+4.g3 
+    (There was also to be considered 4. Nf3 Nc6 5. d4 cxd4 6. Nxd4 Bb4 7. Qd3 at Bogolyubov’s suggestion)
+4... d5 5. e5d4 6.exf6 dxc3 7.dxc3 
+    (An interesting idea. He, so to speak, sacrifices a pawn, in that he makes his pawn majority on the 
+    queen side of no value; but he hopes, by occupying certain central points, to be able to bring 
+    counter-pressure to bear) 
+7... Qxf6 8. Nf3 h6 9.Bg2 Bd7! 10.Nd2 
+    (White’s command of the diagonal g2 to b7 coupled with that of the point e4 is no small embarrasment to Black. 
+    If now 10...Qe5+? then 11. Ne4 and 12. Bf4.) 
+10... Bc6 11. Ne4 Qg6 12. Qe2 Be7 
+    (Not 12...f5 because of the reply 13. Bf3 followed by 13... Nd2 and Black’s e5 will remain a weak point.) 
+13. O-O O-O 14. h4 
+    (An ingenious move, which, however, brings about a disturbance of the equilibrium which up to now may be 
+    said to have existed. Better was 14. f4! Nd7 15. Bd2 Kh8! 16. Rae1 Nf6 17 Bc1. After the text move the 
+    balance weighs in Black’s favor.) 
+14... f5 15. Nd2 Bxg2 
+    (Not 15... Bxh4 because of 16. Nf3!) 
+16. Kxg2 Nc6 17. Nf3 f4 
+    (Otherwise 18... Bf4 and the balance is readjusted.) 
+18. Re1 Rf6 19. Qe4 
+    (the game is already lost for White, for the occupation of the point e4 which seems to consolidate the 
+    position proves to be deceptive. White’s g3 is in fact sick unto death.) 
+19... fxg3 20. fxg3 Bd6 21. g4 Qxe4 22. Rxe4 Raf8 23. Re3 Rf4 24. g5 
+    (24. Rxe6 Rxg4+ 25. Kf2 Ne5 would lead to a debacle.) 
+24... Rg4+ 25. Kh1 
+    (Or 25. Kf2 Ne5 26. Ke2 Rg2+ 27. Kf1 Rg3 winning a piece.) 
+25... hxg5 26. hxg5 Kf7 27. Ng1 
+    (If 27. g6+ Kf6 
+        (not 27...Ke7 because of 28. Nh2 Rh8 29. Re2 Rgh4?? 30. Bg5+.)
+    ) 
+27... Rh8+ 28. Nh3 Ke7 29. b3 Bf4 30. Rf3 Ne5 
+    (0-1)
+```
+
+Se poate distinge linia principala si, folosind indentarile, se pot distinge variantele si sub variantele.
+
+Cum se poate ajunge la astfel de output? 
+
+In opinia mea a incerca sa scoatem un astfel de output cu comentarii atat de umane este o intreprindere 
+foarte complicata. Insa cred ca problema se poate reduce la urmatoarea sub problema:
+
+*Pentru fiecare arbore de intrare avem un numar de mutari in varianta principala sau in subvariante. Pentru
+fiecare mutare din arbore avem un drum de la pozitia initiala la acea mutare. Pentru fiecare mutare posibila
+putem incerca sa generam un comentariu tinand cont de ceea ce s-a intamplat anterior si de mutarea curenta. 
+Daca nu gasim fundament pentru a genera un comentariu la mutarea curenta, pur si simplu nu il facem. Daca
+comentam mutarea curenta si la mutarile anterioare nu s-au facut comentarii, putem considera comentariul 
+pentru toate mutarile anterioare mutarii curente. Atunci cand generam comentariul pentru mutarea curenta
+putem sterge eventual comentarii de la mutarile anterioare (un exemplu ar fi: la mutarea anterioara observam 
+ca s-a capturat un pion, comentariul pentru el ar fi sa zicem captura de pion, dar la mutarea curenta 
+observam ca s-a facut iar captura de pion, atunci din analiza mutarii curente putem spune ca s-a facut un schimb 
+si stergem comentariul de la mutarea anterioara). Apoi nu ramane decat sa le aliniem.* 
+
+### Subproblema curenta
+
+Dandu-se o pozitie initiala si un sir de mutari, cum putem genera comentariul pentru mutarea curenta?
+
+Cred ca rezolvarea acestei probleme in mod direct, prin comentarii, nu este eficienta. Ceea ce propun este 
+o rezolvare in trei faze. Astfel, analiza unui arbore cred ca trebuie sa aiba trei mari etape:
+
+* Decorarea arborelui de mutari cu diverse metadate. Metadatele nu sunt inca limbaj uman, ci doar elemente 
+pe baza caruia se poate construi un comentariu uman. Metadatele vor fi codificate printr-un string de 
+caractere, putem sa le dam si o explicatie eventual, dar asta e numai pentru noi. Exemplu de metadate:
+
+    * Albul da sah
+    * Negrul nu mai poate face rocada
+    * Albul captureaza un turn
+    * Albul transforma pionul in cal
+    * Negrul are avantaj masiv
+    * Pozitie de egalitate
+    * Mutare foarte buna
+    * Greseala foarte mare
+    
+* O a doua analiza a arborelui de mutari astfel decorat unde transformam efectiv metadatele in comentarii. 
+Aici practic putem obtine o propozitie dintr-o metadata sau putem obtine o fraza mai complexa din cateva 
+metadate. De exemplu din:
+    
+    * Albul captureaza un cal
+    * Albul are avantaj masiv
+    
+    Putem obtine un comentariu de genul
+
+    * *White captures a knight and get massive advantage*
+
+* Ultima etapa consta din transformarea structurii arborescente cu comentarii intr-un sir de caractere
+(text) formatat ca in exemplu de output pe care l-am prezentat. Aceasta etapa este mai mult tehnica.
+
+## Taskuri separate
+
+Din cele pe care le-am prezentat rezulta cateva activitati la care ma gandesc, si la care cred ca
+daca definim bine ce intra in task si ce iese, putem sa le executam separat de catre fiecare.
+
+// TODO
