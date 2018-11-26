@@ -261,4 +261,8 @@ metadate. De exemplu din:
 Din cele pe care le-am prezentat rezulta cateva activitati la care ma gandesc, si la care cred ca
 daca definim bine ce intra in task si ce iese, putem sa le executam separat de catre fiecare.
 
-// TODO
+ - mapare spre modelele folosite pentru a lucra
+ - identificare subprobleme(mutarea curenta cu ceea ce sa intamplat pana la ea)
+ - generare metadate pentru subproblema
+ - generare comentariu propriu zis din metadate
+ - generarea raspunsului concret in format text(punerea subproblemelor la un loc,identare etc)

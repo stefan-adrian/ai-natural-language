@@ -18,4 +18,28 @@ public class InputTree {
      * Possible variants/continuations in the initial position
      */
     private List<InputVariant> variants;
+
+    public String getInitialPositionFEN() {
+        return initialPositionFEN;
+    }
+
+    public void setInitialPositionFEN(String initialPositionFEN) {
+        this.initialPositionFEN = initialPositionFEN;
+    }
+
+    public InputVariant getMainVariant() {
+        return mainVariant;
+    }
+
+    public void setMainVariant(InputVariant mainVariant) {
+        this.mainVariant = mainVariant;
+    }
+
+    public List<InputVariant> getVariants() {
+        return variants;
+    }
+
+    public void setVariants(List<InputVariant> variants) {
+        this.variants = variants;
+    }
 }

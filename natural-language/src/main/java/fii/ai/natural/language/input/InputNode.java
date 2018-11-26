@@ -20,6 +20,7 @@ public class InputNode {
      */
     private String move;
 
+
     /**
      * Position score: 0 means equilibrium, negative means black has advantage, positive means
      * white has advantage
@@ -31,4 +32,27 @@ public class InputNode {
      */
     private List<InputVariant> variants;
 
+    public String getMove() {
+        return move;
+    }
+
+    public void setMove(String move) {
+        this.move = move;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public List<InputVariant> getVariants() {
+        return variants;
+    }
+
+    public void setVariants(List<InputVariant> variants) {
+        this.variants = variants;
+    }
 }
