@@ -126,11 +126,35 @@ O pozitie initiala si variantele posibile de mutari din acea pozitie:
 
 ```json
 {
-  "initialPositionFEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-  "variants" : [
-    [ {"move":"1. e2e4","score":0.01}, {"move":"1... e7e5","score":0.005} ],
-    [ {"move":"1. d2d4","score":0.01}, {"move":"1... g8f6","score":0.0},{"move":"2. c2c4","score":0.01} ]
-  ] 
+  "initialStateFEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  "variants": [
+                      {
+                          "moves": [
+                              {
+                                  "move": "wd2d4",
+                                  "score": 0.01
+                              },
+                              {
+                                  "move": "bg8f6",
+                                  "score": 0.0
+                              }
+                          ],
+                          "strategyName": "MinMax"
+                      },
+                      {
+                          "moves": [
+                              {
+                                  "move": "wc2c4",
+                                  "score": 0.0
+                              },
+                              {
+                                  "move": "bg8f6",
+                                  "score": 0.01
+                              }
+                          ],
+                          "strategyName": "AlfaBeta"
+                      }
+                  ] 
 }
 ```
 
@@ -138,23 +162,72 @@ Un joc cu mutari alternative:
 
 ```json
 {
-  "initialPositionFEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-  "mainVariant": [
-    {
-      "move":"1. e2e4","score":0.01,
-      "variants": [
-        [ {"move":"1. d2d4","score":0.01}, {"move":"1... g8f6","score":0.0} ],
-        [ {"move":"1. c2c4","score":0}, {"move":"1... g8f6","score":0.01} ]
-      ]
-    },
-    {
-      "move":"1... e7e5","score":0.01,
-      "variants": [
-        [ {"move":"1... f7f5","score":0.1} ],
-        [ {"move":"1... c7c6","score":0.01},{"move":"2. d2d4","score":0.01} ]
-      ]
+    "initialStateFEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "mainVariant": {
+        "moves": [
+            {
+                "move": "we2e4",
+                "score": 0.01,
+                "variants": [
+                    {
+                        "moves": [
+                            {
+                                "move": "wd2d4",
+                                "score": 0.01
+                            },
+                            {
+                                "move": "bg8f6",
+                                "score": 0.0
+                            }
+                        ],
+                        "strategyName": "MinMax"
+                    },
+                    {
+                        "moves": [
+                            {
+                                "move": "wc2c4",
+                                "score": 0.0
+                            },
+                            {
+                                "move": "bg8f6",
+                                "score": 0.01
+                            }
+                        ],
+                        "strategyName": "AlfaBeta"
+                    }
+                ]
+            },
+            {
+                "move": "be7e5",
+                "score": 0.01,
+                "variants": [
+                    {
+                        "moves": [
+                            {
+                                "move": "bf7f5",
+                                "score": 0.01
+                            }
+                        ],
+                        "strategyName": "AlfaBeta"
+                    },
+                    {
+                        "moves": [
+                            {
+                                "move": "bc7c6",
+                                "score": 0.01
+                            },
+                            {
+                                "move": "wd2d4",
+                                "score": 0.01
+                            }
+                        ],
+                        "strategyName": "MinMax"
+                    }
+                ]
+            }
+        ],
+        "strategyName": null
     }
-  ]
 }
 ```
 

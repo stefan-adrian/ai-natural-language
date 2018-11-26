@@ -7,7 +7,7 @@ public class InputTree {
     /**
      * Initial position described FEN notation
      */
-    private String initialPositionFEN;
+    private String initialStateFEN;
 
     /**
      * Describes the main variant
@@ -19,12 +19,12 @@ public class InputTree {
      */
     private List<InputVariant> variants;
 
-    public String getInitialPositionFEN() {
-        return initialPositionFEN;
+    public String getInitialStateFEN() {
+        return initialStateFEN;
     }
 
-    public void setInitialPositionFEN(String initialPositionFEN) {
-        this.initialPositionFEN = initialPositionFEN;
+    public void setInitialStateFEN(String initialStateFEN) {
+        this.initialStateFEN = initialStateFEN;
     }
 
     public InputVariant getMainVariant() {

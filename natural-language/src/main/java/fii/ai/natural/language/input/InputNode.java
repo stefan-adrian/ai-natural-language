@@ -6,16 +6,16 @@ public class InputNode {
 
     /**
      * Move description string. A simple encoding would be:
-     * - move number
-     * - '. ' (dot, space) if is white, '... ' (three dots, whitespace) if is black to move
+     * - w if is white, b if is black to move
      * - start field, algebraic notation ex: 'e2'
      * - end field, algebraic notation ex: 'e4'
+     * - in case the pawn is at the end of the table the chess piece to be switch with qrbn
      *
      * Examples:
-     *  1. e2e4
-     *  1... e7e5
-     *  2. g1f3
-     *  2... b8c6
+     *  we2e4
+     *  be7e5
+     *  wg1f3
+     *  wa7a8q
      *
      */
     private String move;

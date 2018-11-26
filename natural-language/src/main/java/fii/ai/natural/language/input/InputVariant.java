@@ -10,7 +10,7 @@ public class InputVariant {
     private List<InputNode> moves;
 
     /**
-     * Strategy used for this variant
+     * Strategy used for this variant ex:MinMax, AlfaBeta
      */
     private String strategyName;
 
