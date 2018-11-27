@@ -9,17 +9,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TreeController {
+public class GameController {
     public TreeMapper treeMapper;
 
     @Autowired
-    public TreeController(TreeMapper treeMapper) {
+    public GameController(TreeMapper treeMapper) {
         this.treeMapper = treeMapper;
     }
 
     @PostMapping("/game")
-    public MovesTree commandGame(@RequestBody InputTree inputTree) {
-        MovesTree movesTree = treeMapper.map(inputTree);
-        return movesTree;
+    public MovesTree commentGame(@RequestBody InputTree inputTree) {
+        return treeMapper.map(inputTree);
     }
 }

@@ -341,7 +341,7 @@ daca definim bine ce intra in task si ce iese, putem sa le executam separat de c
  - generarea raspunsului concret in format text(punerea subproblemelor la un loc,identare etc)
  
  ## Definirea metdatelor
- Am gandit moemtan niste metadate pentru problema noastra pentru a decora fiecare mutare:
+ Am gandit momentan niste metadate pentru problema noastra pentru a decora fiecare mutare:
  - <b>pieceTaken</b> o sa fie un camp String in modelul care o sa fie null daca nici o piesa nu a fost luata la aceasta mutare si o sa aiba numele complet al piese care a fost luata in caz contrar
  - <b>castlingState</b> o sa fie un camp String care contine kq in caz ca se poate face rocada in ambele parti(partea dinspre rege si regina),k in caz ca se poate doar in parte dinspre rege, q in caz ca se poate doar in partea dinspre regina si null in caz ca nu se poate face deloc rocada
  - <b>moveGrade</b> o sa fie un camp de tip integer care reprezinta cat de buna este mutarea 0 pentru stare de de echilibru, 1 pentru o miscare cu un avantaj mic, 2 pentru o miscare cu avantaj bun si 3 pentru o miscare cu avantaj foarte bun(pentru miscarile rele opusul -1,-2,-3)
