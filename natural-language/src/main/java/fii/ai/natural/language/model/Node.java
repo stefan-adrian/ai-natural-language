@@ -52,7 +52,9 @@ public class Node {
     /**
      * Variants to the current move
      */
-    private List<InputVariant> variants;
+    private List<MoveVariant> variants;
+
+    private String comment;
 
     public String getMove() {
         return move;
@@ -94,11 +96,19 @@ public class Node {
         this.moveGrade = moveGrade;
     }
 
-    public List<InputVariant> getVariants() {
+    public List<MoveVariant> getVariants() {
         return variants;
     }
 
-    public void setVariants(List<InputVariant> variants) {
+    public void setVariants(List<MoveVariant> variants) {
         this.variants = variants;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
