@@ -1,7 +1,5 @@
 package fii.ai.natural.language.model;
 
-import fii.ai.natural.language.input.InputVariant;
-
 import java.util.List;
 
 public class Node {
@@ -29,14 +27,18 @@ public class Node {
     private double score;
 
     /**
-     * Is null in case no pice was taken or the name of the piece in case a piece was taken in this move.
+     * Is null in case no piece was taken or the name of the piece in case a piece was taken in this move.
      */
     private String pieceTaken;
 
     /**
-     * Indicates if the castling can be made.
+     * Indicates on what side the castling can be made(if can be made in any side)
+     * kq for when the castling can be made on both queen and king side
+     * k for king side
+     * q fot queen side
+     * null for when castling can't be made in any side
      */
-    private Boolean castlingState;
+    private String castlingState;
 
     /**
      * Indicates how good the move is
@@ -80,11 +82,11 @@ public class Node {
         this.pieceTaken = pieceTaken;
     }
 
-    public Boolean getCastlingState() {
+    public String getCastlingState() {
         return castlingState;
     }
 
-    public void setCastlingState(Boolean castlingState) {
+    public void setCastlingState(String castlingState) {
         this.castlingState = castlingState;
     }
 
