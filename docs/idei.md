@@ -347,3 +347,11 @@ daca definim bine ce intra in task si ce iese, putem sa le executam separat de c
  - <b>moveGrade</b> o sa fie un camp de tip integer care reprezinta cat de buna este mutarea 0 pentru stare de de echilibru, 1 pentru o miscare cu un avantaj mic, 2 pentru o miscare cu avantaj bun si 3 pentru o miscare cu avantaj foarte bun(pentru miscarile rele opusul -1,-2,-3)
  - <b>chessPieceName</b> o sa fie un camp de tip String care reprezinta numele complet al piesei mutate la aceasta mutare ex: King, Queen (de asemenea eu ma gandeam car ar fi bine ca numele sa fie scrise mereu cu litera mare)
  - <b>color</b> o sa fie un camp de tip String care reprezinta culoare piesei mutate (White sau Black)
+ 
+ ## Taskuri ramase
+ Deci am zis sa scriu aici taskurile care le vad eu ca ar mai fi pana luni si mai exact ce inseamana astea
+
+- generare metdate pentru problema - parcurgerea arborelui si decorarea acestuia cu metadatele deja definite mai sus(eventual si altele la care nu m-am gandit eu inca)
+ - genrerare comentariu propriu zis - adugarea de functii in CommentServiceImpl sub functia care am definit-o eu deja. Aceste functii ar trebui sa foloseasca inforamtiile din metadate pentru a genera cometarii(atat metadatele existente cat si altele la care nu m-am gandi eu inca)
+ - generarea raspunsului corect in format text - cum am gandit eu ca s-ar face asta ar fi sa se faca un alt model care contine un camp moveNumberCommentary care ii un int si o lista de cometarii(o lista de stringuri) pentru mutarea respectiva, in acest model ar trebui puse comentariile care sunt deja in movesTree-ul nostru. Modelul trebuie creat in functia commentMovesTree din GameService(unde am lasat TODO-ul) si apoi returnat
+  
