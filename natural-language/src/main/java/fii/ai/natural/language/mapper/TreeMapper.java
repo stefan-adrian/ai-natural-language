@@ -37,6 +37,7 @@ public class TreeMapper {
                     nodeForVariants.setMove(inputNode.getMove());
                     nodeForVariants.setScore(inputNode.getScore());
                     nodeForVariants.setPieceTaken(null);
+                    nodeForVariants.setComments(new ArrayList<>());
                     nodeForVariants.setMoveGrade(0);
                     nodes.add(nodeForVariants);
                 }
@@ -45,6 +46,7 @@ public class TreeMapper {
             }
             node.setVariants(moveVariants);
             node.setPieceTaken(null);
+            node.setComments(new ArrayList<>());
             node.setMoveGrade(0);
             moves.add(node);
         }
@@ -52,4 +54,5 @@ public class TreeMapper {
         moveVariant.setStrategyName(inputVariant.getStrategyName());
         return moveVariant;
     }
+    //TODO refactor mapping
 }

@@ -56,7 +56,22 @@ public class Node {
      */
     private List<MoveVariant> variants;
 
-    private String comment;
+    /**
+     * The complete name of the chess piece Ex: King, Queen
+     */
+    private String chessPieceName;
+
+    /**
+     * The color of the piece that is moved ( White or Black )
+     */
+    private String color;
+
+    /**
+     * A list of comments for the move, the list can have one comment or more, comments should be ordered by a criteria
+     * Ex: First comment for a move can be something like: White moves King from d1 to c1.
+     *     The second comment can be: The move gave a big advantage to the White side.
+     */
+    private List<String> comments;
 
     public String getMove() {
         return move;
@@ -106,11 +121,27 @@ public class Node {
         this.variants = variants;
     }
 
-    public String getComment() {
-        return comment;
+    public String getChessPieceName() {
+        return chessPieceName;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setChessPieceName(String chessPieceName) {
+        this.chessPieceName = chessPieceName;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<String> comments) {
+        this.comments = comments;
     }
 }

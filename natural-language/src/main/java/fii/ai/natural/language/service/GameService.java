@@ -2,6 +2,7 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,6 +14,12 @@ import java.util.ArrayList;
 @Service
 public class GameService {
 
+    private CommentService commentService;
+
+    @Autowired
+    public GameService(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     /**
      * This should be called from the controller and decorate the moves tree first with metadata and
@@ -23,7 +30,8 @@ public class GameService {
      */
     public MovesTree commentMovesTree(MovesTree movesTree) {
         decorateMovesTree(movesTree);
-        //TODO call method that generates the comments for the movesTree and return comments List.
+        commentService.commentMovesTree(movesTree);
+        //TODO call method that that puts comments from the moves tree together is a pretty format.
         return movesTree;
     }
 
@@ -42,4 +50,5 @@ public class GameService {
         partialMovesTree.getMainVariant().getMoves().subList(index + 1, partialMovesTree.getMainVariant().getMoves().size()).clear();
         return partialMovesTree;
     }
+
 }

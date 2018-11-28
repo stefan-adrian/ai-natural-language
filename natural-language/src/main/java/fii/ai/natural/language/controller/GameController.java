@@ -30,4 +30,13 @@ public class GameController {
     public MovesTree commentGame(@RequestBody InputTree inputTree) {
         return treeMapper.map(inputTree);
     }
+
+    /**
+     * This is a method that I did only for test in case somebody wants to test the comment function.
+     * But until the method that decorates the tree with metadata is made the metadata values need to be set manually.
+     */
+    @PostMapping("/test")
+    public MovesTree test(@RequestBody InputTree inputTree) {
+        return gameService.commentMovesTree(treeMapper.map(inputTree));
+    }
 }
