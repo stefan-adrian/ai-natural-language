@@ -2,6 +2,8 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
+import fii.ai.natural.language.model.metadata.PieceColorMetadata;
+import fii.ai.natural.language.model.metadata.PieceNameMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

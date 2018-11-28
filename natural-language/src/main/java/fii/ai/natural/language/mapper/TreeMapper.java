@@ -36,18 +36,14 @@ public class TreeMapper {
                     Node nodeForVariants = new Node();
                     nodeForVariants.setMove(inputNode.getMove());
                     nodeForVariants.setScore(inputNode.getScore());
-                    nodeForVariants.setPieceTaken(null);
                     nodeForVariants.setComments(new ArrayList<>());
-                    nodeForVariants.setMoveGrade(0);
                     nodes.add(nodeForVariants);
                 }
                 moveVariantForNode.setMoves(nodes);
                 moveVariants.add(moveVariantForNode);
             }
             node.setVariants(moveVariants);
-            node.setPieceTaken(null);
             node.setComments(new ArrayList<>());
-            node.setMoveGrade(0);
             moves.add(node);
         }
         moveVariant.setMoves(moves);
