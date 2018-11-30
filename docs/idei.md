@@ -354,4 +354,8 @@ daca definim bine ce intra in task si ce iese, putem sa le executam separat de c
 - generare metdate pentru problema - parcurgerea arborelui si decorarea acestuia cu metadatele deja definite mai sus(eventual si altele la care nu m-am gandit eu inca)
  - genrerare comentariu propriu zis - adugarea de functii in CommentServiceImpl sub functia care am definit-o eu deja. Aceste functii ar trebui sa foloseasca inforamtiile din metadate pentru a genera cometarii(atat metadatele existente cat si altele la care nu m-am gandi eu inca)
  - generarea raspunsului corect in format text - cum am gandit eu ca s-ar face asta ar fi sa se faca un alt model care contine un camp moveNumberCommentary care ii un int si o lista de cometarii(o lista de stringuri) pentru mutarea respectiva, in acest model ar trebui puse comentariile care sunt deja in movesTree-ul nostru. Modelul trebuie creat in functia commentMovesTree din GameService(unde am lasat TODO-ul) si apoi returnat
-  
+ 
+ ### Precizare privind taskurile pentru luni
+ Deoarece mai era nevoie de un task pentru inca o persoana, am mai adaugat unul ce consta in:
+
+- crearea unui model pentru cazul de input unde se primeste doar o pozitie si variantele de mutari posibile(primul json de la  scenarii si exemple), precum  si crearea unui mapper pentru modelul respectiv; 
