@@ -347,6 +347,9 @@ daca definim bine ce intra in task si ce iese, putem sa le executam separat de c
  - <b>moveGrade</b> o sa fie un camp de tip integer care reprezinta cat de buna este mutarea 0 pentru stare de de echilibru, 1 pentru o miscare cu un avantaj mic, 2 pentru o miscare cu avantaj bun si 3 pentru o miscare cu avantaj foarte bun(pentru miscarile rele opusul -1,-2,-3)
  - <b>chessPieceName</b> o sa fie un camp de tip String care reprezinta numele complet al piesei mutate la aceasta mutare ex: King, Queen (de asemenea eu ma gandeam car ar fi bine ca numele sa fie scrise mereu cu litera mare)
  - <b>color</b> o sa fie un camp de tip String care reprezinta culoare piesei mutate (White sau Black)
+ - <b>enPassant</b> o sa fie un camp de tip boolean care va indicat daca dupa mutarea facuta adversarul va poate face enPassant
+ - <b>gameState</b> o sa fie un camp de tip String care va avea valoarea equal daca dupa aceasta mutare jocul a ajuns sa fie egal, checkmate daca aceasta mutarea cauzeaza castigarea jocului si null altfel
+ - <b>check</b> o sa fie o lista de sringuri in care se vor gasi piesele care dau sah la rege
  
  ## Taskuri ramase
  Deci am zis sa scriu aici taskurile care le vad eu ca ar mai fi pana luni si mai exact ce inseamana astea
