@@ -69,6 +69,23 @@ public class CommentServiceImpl implements CommentService {
                     moveMetadata.setPieceTaken(pieceTakenMetadata.getPieceTaken());
                     break;
                 }
+                case "EnPassant": {
+                    EnPassantMetadata enPassantMetadata = (EnPassantMetadata) metadata;
+                    moveMetadata.setEnPassantPossible(enPassantMetadata.getEnPassantPossible());
+                    break;
+                }
+                case "GameState": {
+                    GameStateMetadata gameStateMetadata = (GameStateMetadata) metadata;
+                    moveMetadata.setState(gameStateMetadata.getState());
+                    break;
+                }
+                case "Check": {
+                    CheckMetadata checkMetadata = (CheckMetadata) metadata;
+                    moveMetadata.setCheckPieces(checkMetadata.getCheckPieces());
+                    break;
+                }
+
+
             }
         }
         return moveMetadata;
