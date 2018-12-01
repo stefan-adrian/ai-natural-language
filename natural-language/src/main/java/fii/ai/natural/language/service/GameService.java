@@ -2,12 +2,14 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
+import fii.ai.natural.language.model.Node;
 import fii.ai.natural.language.model.metadata.PieceColorMetadata;
 import fii.ai.natural.language.model.metadata.PieceNameMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Here I tried to create a structure for the service that gets the input(mapped to model) from the controller and
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 public class GameService {
 
     private CommentService commentService;
+    private List<MoveComment> moveCommentList;
 
     @Autowired
     public GameService(CommentService commentService) {
@@ -27,14 +30,17 @@ public class GameService {
      * This should be called from the controller and decorate the moves tree first with metadata and
      * after that should generate a list of comments for the chess game(first should decorate the moves
      * three with comments individually for every move and after that should put them together)
+     *
      * @param movesTree represents the input from AI module mapped to MovesTree object
      * @return the return value gonna be changed in a list of comments
      */
-    public MovesTree commentMovesTree(MovesTree movesTree) {
+
+    public List<MoveComment> commentMovesTree(MovesTree movesTree) {
         decorateMovesTree(movesTree);
         commentService.commentMovesTree(movesTree);
         //TODO call method that that puts comments from the moves tree together is a pretty format.
-        return movesTree;
+        //parcurg arborele si returnez o lista cu numarul mutarii si comentariile
+        return concatentateComments(movesTree);
     }
 
     private void decorateMovesTree(MovesTree movesTree) {
@@ -51,6 +57,14 @@ public class GameService {
         partialMovesTree.getMainVariant().setMoves(new ArrayList<>(movesTree.getMainVariant().getMoves()));
         partialMovesTree.getMainVariant().getMoves().subList(index + 1, partialMovesTree.getMainVariant().getMoves().size()).clear();
         return partialMovesTree;
+    }
+
+    private List<MoveComment> concatentateComments(MovesTree movesTree) {
+        moveCommentList = new ArrayList<>();
+        for (int index = 0; index < movesTree.getMainVariant().getMoves().size(); index++) {
+            moveCommentList.add(new MoveComment(index + 1, movesTree.getMainVariant().getMoves().get(index).getComments()));
+        }
+        return moveCommentList;
     }
 
 }
