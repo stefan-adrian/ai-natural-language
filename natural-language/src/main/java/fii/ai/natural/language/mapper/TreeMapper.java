@@ -34,8 +34,8 @@ public class TreeMapper {
                 List<Node> nodes = new ArrayList<>();
                 for (InputNode inputNodeForNode : inputVariantForNode.getMoves()) {
                     Node nodeForVariants = new Node();
-                    nodeForVariants.setMove(inputNode.getMove());
-                    nodeForVariants.setScore(inputNode.getScore());
+                    nodeForVariants.setMove(inputNodeForNode.getMove());
+                    nodeForVariants.setScore(inputNodeForNode.getScore());
                     nodeForVariants.setComments(new ArrayList<>());
                     nodes.add(nodeForVariants);
                 }
