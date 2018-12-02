@@ -1,4 +1,4 @@
-package fii.ai.natural.language.service;
+package fii.ai.natural.language.model;
 
 import java.util.List;
 

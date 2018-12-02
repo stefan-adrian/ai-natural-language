@@ -76,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
         if (moveGrade == 0)
             comment = "The move caused" + impact;
         else
-            comment = "The move gave" + impact + "for" + moveMetadata.getColor() + " side.";
+            comment = "The move gave" + impact + "for " + moveMetadata.getColor() + " side.";
         move.getComments().add(comment);
     }
 
@@ -88,28 +88,32 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void decorateWithCastlingPossibilityComment(MovesTree movesTree, int indexOfMove, MoveMetadata moveMetadata, Node move) {
-        Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 1);
-        MoveMetadata precedentMoveMetadata = mapMetadataListToMoveMetadata(precedentMove.getMetadata());
-        String currentCastlingState = moveMetadata.getCastlingState();
-        String castlingStateComment="";
-        if (currentCastlingState == null && precedentMoveMetadata.getCastlingState()!=null) {
-            castlingStateComment = moveMetadata.getColor() + "can not do castling any more on either side.";
-        }
-        else {
-            switch (currentCastlingState) {
-                case "kq":
-                    castlingStateComment = moveMetadata.getColor() + "can do castling on both sides (of the king and of the queen)";
-                    break;
-                case "q":
-                    castlingStateComment = moveMetadata.getColor() + "can do castling on the side of the queen";
-                    break;
-                case "k":
-                    castlingStateComment = moveMetadata.getColor() + "can do castling on the side of the king";
-                    break;
+        if(indexOfMove-2>=0) {
+            Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 2);
+            MoveMetadata precedentMoveMetadata = mapMetadataListToMoveMetadata(precedentMove.getMetadata());
+            String currentCastlingState = moveMetadata.getCastlingState();
+            String castlingStateComment = null;
+            if (currentCastlingState == null && precedentMoveMetadata.getCastlingState() != null) {
+                castlingStateComment = moveMetadata.getColor() + " can not do castling any more on either side.";
+            } else {
+                if(currentCastlingState!=null && !currentCastlingState.equals(precedentMoveMetadata.getCastlingState())) {
+                    switch (currentCastlingState) {
+                        case "kq":
+                            castlingStateComment = moveMetadata.getColor() + " can do castling on both sides (of the king and of the queen)";
+                            break;
+                        case "q":
+                            castlingStateComment = moveMetadata.getColor() + " can do castling on the side of the queen";
+                            break;
+                        case "k":
+                            castlingStateComment = moveMetadata.getColor() + " can do castling on the side of the king";
+                            break;
+                    }
+                }
+            }
+            if (castlingStateComment != null) {
+                move.getComments().add(castlingStateComment);
             }
         }
-        if(castlingStateComment!=null)
-            move.getComments().add(castlingStateComment);
     }
 
     private void decorateWithIfPossibleEnPassantComment(MoveMetadata moveMetadata, Node move) {
@@ -175,7 +179,7 @@ public class CommentServiceImpl implements CommentService {
                 }
                 case "PieceName": {
                     PieceNameMetadata pieceNameMetadata = (PieceNameMetadata) metadata;
-                    moveMetadata.setName(((PieceNameMetadata) metadata).getChessPieceName());
+                    moveMetadata.setName(pieceNameMetadata.getChessPieceName());
                     break;
                 }
                 case "PieceTaken": {

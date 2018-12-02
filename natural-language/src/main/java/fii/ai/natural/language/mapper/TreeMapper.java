@@ -16,39 +16,40 @@ public class TreeMapper {
     public MovesTree map(InputTree inputTree) {
         MovesTree movesTree = new MovesTree();
         movesTree.setInitialStateFEN(inputTree.getInitialStateFEN());
-        movesTree.setMainVariant(mapInputVariant(inputTree.getMainVariant()));
+        movesTree.setMainVariant(mapMainVariant(inputTree.getMainVariant()));
         return movesTree;
     }
 
-    private MoveVariant mapInputVariant(InputVariant inputVariant) {
+    private MoveVariant mapMainVariant(InputVariant inputVariant) {
         MoveVariant moveVariant = new MoveVariant();
         List<Node> moves = new ArrayList<>();
         for (InputNode inputNode : inputVariant.getMoves()) {
             Node node = new Node();
             node.setMove(inputNode.getMove());
             node.setScore(inputNode.getScore());
-            List<MoveVariant> moveVariants = new ArrayList<>();
-            for (InputVariant inputVariantForNode : inputNode.getVariants()) {
-                MoveVariant moveVariantForNode = new MoveVariant();
-                moveVariantForNode.setStrategyName(inputVariantForNode.getStrategyName());
-                List<Node> nodes = new ArrayList<>();
-                for (InputNode inputNodeForNode : inputVariantForNode.getMoves()) {
-                    Node nodeForVariants = new Node();
-                    nodeForVariants.setMove(inputNode.getMove());
-                    nodeForVariants.setScore(inputNode.getScore());
-                    nodeForVariants.setComments(new ArrayList<>());
-                    nodes.add(nodeForVariants);
-                }
-                moveVariantForNode.setMoves(nodes);
-                moveVariants.add(moveVariantForNode);
-            }
-            node.setVariants(moveVariants);
-            node.setComments(new ArrayList<>());
+            node.setVariants(mapInputVariantsForVariantsInsideEachMove(inputNode.getVariants()));
             moves.add(node);
         }
         moveVariant.setMoves(moves);
         moveVariant.setStrategyName(inputVariant.getStrategyName());
         return moveVariant;
     }
-    //TODO refactor mapping
+
+    private List<MoveVariant> mapInputVariantsForVariantsInsideEachMove(List<InputVariant> nodeVariants){
+        List<MoveVariant> moveVariants = new ArrayList<>();
+        for (InputVariant inputVariantForNode : nodeVariants) {
+            MoveVariant moveVariantForNode = new MoveVariant();
+            moveVariantForNode.setStrategyName(inputVariantForNode.getStrategyName());
+            List<Node> nodes = new ArrayList<>();
+            for (InputNode inputNodeForNode : inputVariantForNode.getMoves()) {
+                Node nodeForVariants = new Node();
+                nodeForVariants.setMove(inputNodeForNode.getMove());
+                nodeForVariants.setScore(inputNodeForNode.getScore());
+                nodes.add(nodeForVariants);
+            }
+            moveVariantForNode.setMoves(nodes);
+            moveVariants.add(moveVariantForNode);
+        }
+        return moveVariants;
+    }
 }

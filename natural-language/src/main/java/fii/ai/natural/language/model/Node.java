@@ -43,7 +43,7 @@ public class Node {
      * Ex: First comment for a move can be something like: White moves King from d1 to c1.
      * The second comment can be: The move gave a big advantage to the White side.
      */
-    private List<String> comments;
+    private List<String> comments = new ArrayList<>();
 
     public String getMove() {
         return move;

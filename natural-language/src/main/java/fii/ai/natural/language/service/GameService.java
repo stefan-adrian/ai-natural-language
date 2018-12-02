@@ -1,10 +1,8 @@
 package fii.ai.natural.language.service;
 
+import fii.ai.natural.language.model.MoveComment;
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
-import fii.ai.natural.language.model.Node;
-import fii.ai.natural.language.model.metadata.PieceColorMetadata;
-import fii.ai.natural.language.model.metadata.PieceNameMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +35,20 @@ public class GameService {
 
     public List<MoveComment> commentMovesTree(MovesTree movesTree) {
         decorateMovesTree(movesTree);
+
+        //This commented code is only yo check to test comment functionality until the real decoration with metadata is made
+        /*movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceColorMetadata("White"));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceNameMetadata("King"));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceTakenMetadata("Queen"));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new MoveGradeMetadata(3));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new CastlingStateMetadata("kq"));
+
+        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new PieceColorMetadata("Black"));
+        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new PieceNameMetadata("Queen"));
+        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new MoveGradeMetadata(1));
+        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new CastlingStateMetadata("k"));*/
+
         commentService.commentMovesTree(movesTree);
-        //TODO call method that that puts comments from the moves tree together is a pretty format.
-        //parcurg arborele si returnez o lista cu numarul mutarii si comentariile
         return concatentateComments(movesTree);
     }
 
