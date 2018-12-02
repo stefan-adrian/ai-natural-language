@@ -6,7 +6,7 @@ public class MoveMetadata {
 
     private String castlingState;
 
-    private Integer moveGrade;
+    private Integer moveGrade = 0;
 
     private String color;
 
@@ -14,12 +14,11 @@ public class MoveMetadata {
 
     private String pieceTaken;
 
-    private Boolean enPassantPossible=false;
+    private Boolean enPassantPossible = false;
 
     private List<String> checkPieces;
 
     private String state;
-
 
 
     public String getCastlingState() {

@@ -2,15 +2,13 @@ package fii.ai.natural.language.controller;
 
 import fii.ai.natural.language.input.InputTree;
 import fii.ai.natural.language.mapper.TreeMapper;
-import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.service.GameService;
-import fii.ai.natural.language.service.MoveComment;
+import fii.ai.natural.language.model.MoveComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,7 +29,7 @@ public class GameController {
      * @return the return value gonna be changed to a List of comments
      */
     @PostMapping("/game")
-    public List<MoveComment> test(@RequestBody InputTree inputTree) {
+    public List<MoveComment> game(@RequestBody InputTree inputTree) {
         return gameService.commentMovesTree(treeMapper.map(inputTree));
     }
 }
