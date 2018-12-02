@@ -10,4 +10,5 @@ import fii.ai.natural.language.model.MovesTree;
 public interface CommentService {
 
     MovesTree commentMovesTree(MovesTree movesTree);
+
 }

@@ -4,10 +4,14 @@ import fii.ai.natural.language.input.InputTree;
 import fii.ai.natural.language.mapper.TreeMapper;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.service.GameService;
+import fii.ai.natural.language.service.MoveComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class GameController {
@@ -27,16 +31,7 @@ public class GameController {
      * @return the return value gonna be changed to a List of comments
      */
     @PostMapping("/game")
-    public MovesTree commentGame(@RequestBody InputTree inputTree) {
-        return treeMapper.map(inputTree);
-    }
-
-    /**
-     * This is a method that I did only for test in case somebody wants to test the comment function.
-     * But until the method that decorates the tree with metadata is made the metadata values need to be set manually.
-     */
-    @PostMapping("/test")
-    public MovesTree test(@RequestBody InputTree inputTree) {
+    public List<MoveComment> test(@RequestBody InputTree inputTree) {
         return gameService.commentMovesTree(treeMapper.map(inputTree));
     }
 }
