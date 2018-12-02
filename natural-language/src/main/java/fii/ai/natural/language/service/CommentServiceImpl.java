@@ -32,9 +32,12 @@ public class CommentServiceImpl implements CommentService {
         Node move = movesTree.getMainVariant().getMoves().get(indexOfMove);
         MoveMetadata moveMetadata = mapMetadataListToMoveMetadata(move.getMetadata());
         decorateWithBasicMoveDescriptionComment(moveMetadata, move);
-        //decorateWithImpactOnGameComment(moveMetadata, move);
-        //decorateWithCommentIfPieceWasTaken(moveMetadata, move);
-        //decorateWithCastlingPossibilityComment(movesTree, indexOfMove, moveMetadata, move);
+        decorateWithImpactOnGameComment(moveMetadata, move);
+        decorateWithCommentIfPieceWasTaken(moveMetadata, move);
+        decorateWithCastlingPossibilityComment(movesTree, indexOfMove, moveMetadata, move);
+        //decorateWithIfCheckComment(moveMetadata, move);
+        //decorateWithIfPossibleEnPassantComment(moveMetadata, move);
+        //decorateWithGameStateComment(moveMetadata, move);
     }
 
     private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata, Node move) {
@@ -71,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
         }
         String comment = "";
         if (moveGrade == 0)
-            comment += "The move caused" + impact;
+            comment = "The move caused" + impact;
         else
             comment = "The move gave" + impact + "for" + moveMetadata.getColor() + " side.";
         move.getComments().add(comment);
@@ -107,6 +110,48 @@ public class CommentServiceImpl implements CommentService {
         }
         if(castlingStateComment!=null)
             move.getComments().add(castlingStateComment);
+    }
+
+    private void decorateWithIfPossibleEnPassantComment(MoveMetadata moveMetadata, Node move) {
+        boolean possible = moveMetadata.getEnPassantPossible();
+        String comment=null;
+        if(possible) {
+            comment = moveMetadata.getColor() + " side can do en-passant move. ";
+        }
+        if(comment!=null) {
+            move.getComments().add(comment);
+        }
+    }
+
+    private void decorateWithIfCheckComment(MoveMetadata moveMetadata, Node move) {
+        List<String> checkPieces = moveMetadata.getCheckPieces();
+        String comment = null;
+        if(checkPieces != null) {
+            comment =  moveMetadata.getColor() + " side checked the opponent from the piece(s): ";
+            for(String i : checkPieces) {
+                comment += i;
+                comment += "; ";
+            }
+        }
+        if(comment != null) {
+            move.getComments().add(comment);
+        }
+    }
+
+    private void decorateWithGameStateComment(MoveMetadata moveMetadata, Node move) {
+        String state = moveMetadata.getState();
+        String comment = null;
+        if(state != null) {
+            if(state == "equal") {
+                comment = "Game finished as a draw.";
+            }
+            if(state == "checkmate") {
+                comment = moveMetadata.getColor() + " side won the game.";
+            }
+        }
+        if(comment != null) {
+            move.getComments().add(comment);
+        }
     }
 
     private MoveMetadata mapMetadataListToMoveMetadata(List<Metadata> metadatas){
