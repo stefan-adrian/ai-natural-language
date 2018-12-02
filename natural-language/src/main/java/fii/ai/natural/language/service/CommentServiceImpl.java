@@ -30,14 +30,83 @@ public class CommentServiceImpl implements CommentService {
      */
     private void commentMove(MovesTree movesTree, int indexOfMove) {
         Node move = movesTree.getMainVariant().getMoves().get(indexOfMove);
-        MoveMetadata moveMetadata=mapMetadataListToMoveMetadata(move.getMetadata());
-        decorateWithBasicMoveDescriptionComment(moveMetadata,move);
+        MoveMetadata moveMetadata = mapMetadataListToMoveMetadata(move.getMetadata());
+        decorateWithBasicMoveDescriptionComment(moveMetadata, move);
+        //decorateWithImpactOnGameComment(moveMetadata, move);
+        //decorateWithCommentIfPieceWasTaken(moveMetadata, move);
+        //decorateWithCastlingPossibilityComment(movesTree, indexOfMove, moveMetadata, move);
     }
 
-    private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata,Node move) {
+    private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata, Node move) {
         String comment = moveMetdata.getColor() + " moves " + moveMetdata.getName() + " from " + move.getMove().charAt(1)
                 + move.getMove().charAt(2) + " to " + move.getMove().charAt(3) + move.getMove().charAt(4);
         move.getComments().add(comment);
+    }
+
+    private void decorateWithImpactOnGameComment(MoveMetadata moveMetadata, Node move) {
+        int moveGrade = moveMetadata.getMoveGrade();
+        String impact = "";
+        switch (moveGrade) {
+            case -3:
+                impact = " massive disadvantage after that move ";
+                break;
+            case -2:
+                impact = " big disadvantage after that move ";
+                break;
+            case -1:
+                impact = " slightly disadvantage after that move ";
+                break;
+            case 0:
+                impact = " no apparent impact on the game ";
+                break;
+            case 1:
+                impact = " slightly advantage after that move ";
+                break;
+            case 2:
+                impact = " big advantage after that move ";
+                break;
+            case 3:
+                impact = " massive advantage after that move ";
+                break;
+        }
+        String comment = "";
+        if (moveGrade == 0)
+            comment += "The move caused" + impact;
+        else
+            comment = "The move gave" + impact + "for" + moveMetadata.getColor() + " side.";
+        move.getComments().add(comment);
+    }
+
+    private void decorateWithCommentIfPieceWasTaken(MoveMetadata moveMetadata, Node move) {
+        if (moveMetadata.getPieceTaken() != null) {
+            String comment = moveMetadata.getColor() + " has captured " + moveMetadata.getPieceTaken();
+            move.getComments().add(comment);
+        }
+    }
+
+    private void decorateWithCastlingPossibilityComment(MovesTree movesTree, int indexOfMove, MoveMetadata moveMetadata, Node move) {
+        Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 1);
+        MoveMetadata precedentMoveMetadata = mapMetadataListToMoveMetadata(precedentMove.getMetadata());
+        String currentCastlingState = moveMetadata.getCastlingState();
+        String castlingStateComment="";
+        if (currentCastlingState == null && precedentMoveMetadata.getCastlingState()!=null) {
+            castlingStateComment = moveMetadata.getColor() + "can not do castling any more on either side.";
+        }
+        else {
+            switch (currentCastlingState) {
+                case "kq":
+                    castlingStateComment = moveMetadata.getColor() + "can do castling on both sides (of the king and of the queen)";
+                    break;
+                case "q":
+                    castlingStateComment = moveMetadata.getColor() + "can do castling on the side of the queen";
+                    break;
+                case "k":
+                    castlingStateComment = moveMetadata.getColor() + "can do castling on the side of the king";
+                    break;
+            }
+        }
+        if(castlingStateComment!=null)
+            move.getComments().add(castlingStateComment);
     }
 
     private MoveMetadata mapMetadataListToMoveMetadata(List<Metadata> metadatas){
