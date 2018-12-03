@@ -139,7 +139,8 @@ O pozitie initiala si variantele posibile de mutari din acea pozitie:
                                   "score": 0.0
                               }
                           ],
-                          "strategyName": "MinMax"
+                          "strategyName": "MinMax",
+                          "algorithmName": "PawnAdvancement"
                       },
                       {
                           "moves": [
@@ -152,7 +153,8 @@ O pozitie initiala si variantele posibile de mutari din acea pozitie:
                                   "score": 0.01
                               }
                           ],
-                          "strategyName": "AlfaBeta"
+                          "strategyName": "AlfaBeta",
+                          "algorithmName": "PawnAdvancement"
                       }
                   ] 
 }
