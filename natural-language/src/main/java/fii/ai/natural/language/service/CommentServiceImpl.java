@@ -1,16 +1,23 @@
 package fii.ai.natural.language.service;
 
-import fii.ai.natural.language.model.Metadata;
+import fii.ai.natural.language.mapper.MetadataMapper;
 import fii.ai.natural.language.model.MoveMetadata;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
-import fii.ai.natural.language.model.metadata.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
+
+    private MetadataMapper metadataMapper;
+
+    @Autowired
+    public CommentServiceImpl(MetadataMapper metadataMapper) {
+        this.metadataMapper = metadataMapper;
+    }
 
     @Override
     public MovesTree commentMovesTree(MovesTree movesTree) {
@@ -30,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
      */
     private void commentMove(MovesTree movesTree, int indexOfMove) {
         Node move = movesTree.getMainVariant().getMoves().get(indexOfMove);
-        MoveMetadata moveMetadata = mapMetadataListToMoveMetadata(move.getMetadata());
+        MoveMetadata moveMetadata = metadataMapper.map(move.getMetadata());
         decorateWithBasicMoveDescriptionComment(moveMetadata, move);
         decorateWithImpactOnGameComment(moveMetadata, move);
         decorateWithCommentIfPieceWasTaken(moveMetadata, move);
@@ -86,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
     private void decorateWithCastlingPossibilityComment(MovesTree movesTree, int indexOfMove, MoveMetadata moveMetadata, Node move) {
         if (indexOfMove - 2 >= 0) {
             Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 2);
-            MoveMetadata precedentMoveMetadata = mapMetadataListToMoveMetadata(precedentMove.getMetadata());
+            MoveMetadata precedentMoveMetadata = metadataMapper.map(precedentMove.getMetadata());
             String currentCastlingState = moveMetadata.getCastlingState();
             String castlingStateComment = null;
             if (currentCastlingState == null && precedentMoveMetadata.getCastlingState() != null) {
@@ -164,75 +171,11 @@ public class CommentServiceImpl implements CommentService {
     private void decorateWithEqualScopeComment(MovesTree movesTree, int indexOfMove,MoveMetadata moveMetadata, Node move){
         if (indexOfMove - 2 >= 0) {
             Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 2);
-            MoveMetadata precedentMoveMetadata = mapMetadataListToMoveMetadata(precedentMove.getMetadata());
+            MoveMetadata precedentMoveMetadata = metadataMapper.map(precedentMove.getMetadata());
             if(moveMetadata.getEqualScope()!=precedentMoveMetadata.getEqualScope()){
                 move.getComments().add("Because of the big disadvantage "+moveMetadata.getColor()+" started playing in scope of equal.");
             }
         }
 
-    }
-
-    private MoveMetadata mapMetadataListToMoveMetadata(List<Metadata> metadatas) {
-        MoveMetadata moveMetadata = new MoveMetadata();
-        for (Metadata metadata : metadatas) {
-            switch (metadata.getKey()) {
-                case "CastlingState": {
-                    CastlingStateMetadata castlingStateMetadata = (CastlingStateMetadata) metadata;
-                    moveMetadata.setCastlingState(castlingStateMetadata.getCastlingState());
-                    break;
-                }
-                case "MoveGrade": {
-                    MoveGradeMetadata moveGradeMetadata = (MoveGradeMetadata) metadata;
-                    moveMetadata.setMoveGrade(moveGradeMetadata.getMoveGrade());
-                    break;
-                }
-                case "PieceColor": {
-                    PieceColorMetadata pieceColorMetadata = (PieceColorMetadata) metadata;
-                    moveMetadata.setColor(pieceColorMetadata.getColor());
-                    break;
-                }
-                case "PieceName": {
-                    PieceNameMetadata pieceNameMetadata = (PieceNameMetadata) metadata;
-                    moveMetadata.setName(pieceNameMetadata.getChessPieceName());
-                    break;
-                }
-                case "PieceTaken": {
-                    PieceTakenMetadata pieceTakenMetadata = (PieceTakenMetadata) metadata;
-                    moveMetadata.setPieceTaken(pieceTakenMetadata.getPieceTaken());
-                    break;
-                }
-                case "EnPassant": {
-                    EnPassantMetadata enPassantMetadata = (EnPassantMetadata) metadata;
-                    moveMetadata.setEnPassantPossible(enPassantMetadata.getEnPassantPossible());
-                    break;
-                }
-                case "GameState": {
-                    GameStateMetadata gameStateMetadata = (GameStateMetadata) metadata;
-                    moveMetadata.setState(gameStateMetadata.getState());
-                    break;
-                }
-                case "Check": {
-                    CheckMetadata checkMetadata = (CheckMetadata) metadata;
-                    moveMetadata.setCheckPieces(checkMetadata.getCheckPieces());
-                    break;
-                }
-                case "Promotion": {
-                    PromotionMetadata promotionMetadata = (PromotionMetadata) metadata;
-                    moveMetadata.setPromoteToPiece(promotionMetadata.getPromotedToPiece());
-                    break;
-                }
-                case "EqualScope": {
-                    EqualScopeMetadata equalScopeMetadata = (EqualScopeMetadata) metadata;
-                    moveMetadata.setEqualScope(equalScopeMetadata.getPlayingForEqual());
-                    break;
-                }
-                case "PreCheckMate": {
-                    PreCheckMateMetadata preCheckMateMetadata = (PreCheckMateMetadata) metadata;
-                    moveMetadata.setPreCheckMate(preCheckMateMetadata.getPreCheckMate());
-                    break;
-                }
-            }
-        }
-        return moveMetadata;
     }
 }
