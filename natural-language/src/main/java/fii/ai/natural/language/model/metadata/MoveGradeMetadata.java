@@ -19,10 +19,9 @@ public class MoveGradeMetadata implements Metadata {
      * Indicates how good the move is
      * Examples:
      * - 0 for a move that is considered to be unimportant
-     * - 1 for a move that is considered to be a small improvement
+     * - 1 for a move that is considered to be good
      * - 2 for a move that is considered to be very good
-     * - 3 for a move that is considered to be game changing
-     * -1,-2,-3 the reverse of 1, 2, 3
+     * -1,-2 the reverse of 1, 2
      */
     private final Integer moveGrade;
 

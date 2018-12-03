@@ -21,8 +21,7 @@ public class Node {
     private String move;
 
     /**
-     * Position score: 0 means equilibrium, negative means black has advantage, positive means
-     * white has advantage
+     * Position score: 0 means equilibrium, negative means disadvantage, positive means advantage
      */
     private double score;
 

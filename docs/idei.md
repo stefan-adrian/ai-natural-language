@@ -139,8 +139,8 @@ O pozitie initiala si variantele posibile de mutari din acea pozitie:
                                   "score": 0.0
                               }
                           ],
-                          "strategyName": "MinMax",
-                          "algorithmName": "PawnAdvancement"
+                          "algorithmName": "MinMax",
+                          "strategyName": "PawnAdvancement"
                       },
                       {
                           "moves": [
@@ -153,8 +153,8 @@ O pozitie initiala si variantele posibile de mutari din acea pozitie:
                                   "score": 0.01
                               }
                           ],
-                          "strategyName": "AlfaBeta",
-                          "algorithmName": "PawnAdvancement"
+                          "algorithmName": "AlfaBeta",
+                          "strategyName": "PawnAdvancement"
                       }
                   ] 
 }
@@ -182,7 +182,8 @@ Un joc cu mutari alternative:
                                 "score": 0.0
                             }
                         ],
-                        "strategyName": "MinMax"
+                        "algorithmName": "MinMax",
+                        "strategyName": "PawnAdvancement"
                     },
                     {
                         "moves": [
@@ -195,7 +196,8 @@ Un joc cu mutari alternative:
                                 "score": 0.01
                             }
                         ],
-                        "strategyName": "AlfaBeta"
+                        "algorithmName": "AlfaBeta",
+                        "strategyName": "PawnAdvancement"
                     }
                 ]
             },
@@ -210,7 +212,8 @@ Un joc cu mutari alternative:
                                 "score": 0.01
                             }
                         ],
-                        "strategyName": "AlfaBeta"
+                        "algorithmName": "AlfaBeta",
+                        "strategyName": "PawnAdvancement"
                     },
                     {
                         "moves": [
@@ -223,12 +226,12 @@ Un joc cu mutari alternative:
                                 "score": 0.01
                             }
                         ],
-                        "strategyName": "MinMax"
+                        "algorithmName": "MinMax",
+                        "strategyName": "PawnAdvancement"
                     }
                 ]
             }
-        ],
-        "strategyName": null
+        ]
     }
 }
 ```
@@ -346,7 +349,7 @@ daca definim bine ce intra in task si ce iese, putem sa le executam separat de c
  Am gandit momentan niste metadate pentru problema noastra pentru a decora fiecare mutare:
  - <b>pieceTaken</b> o sa fie un camp String in modelul care o sa fie null daca nici o piesa nu a fost luata la aceasta mutare si o sa aiba numele complet al piese care a fost luata in caz contrar
  - <b>castlingState</b> o sa fie un camp String care contine kq in caz ca se poate face rocada in ambele parti(partea dinspre rege si regina),k in caz ca se poate doar in parte dinspre rege, q in caz ca se poate doar in partea dinspre regina si null in caz ca nu se poate face deloc rocada
- - <b>moveGrade</b> o sa fie un camp de tip integer care reprezinta cat de buna este mutarea 0 pentru stare de de echilibru, 1 pentru o miscare cu un avantaj mic, 2 pentru o miscare cu avantaj bun si 3 pentru o miscare cu avantaj foarte bun(pentru miscarile rele opusul -1,-2,-3)
+ - <b>moveGrade</b> o sa fie un camp de tip integer care reprezinta cat de buna este mutarea 0 pentru stare de de echilibru, 1 pentru o miscare buna, 2 pentru o miscare foarte buna(pentru miscarile rele opusul -1,-2)
  - <b>chessPieceName</b> o sa fie un camp de tip String care reprezinta numele complet al piesei mutate la aceasta mutare ex: King, Queen (de asemenea eu ma gandeam car ar fi bine ca numele sa fie scrise mereu cu litera mare)
  - <b>color</b> o sa fie un camp de tip String care reprezinta culoare piesei mutate (White sau Black)
  - <b>enPassant</b> o sa fie un camp de tip boolean care va indicat daca dupa mutarea facuta adversarul va poate face enPassant
