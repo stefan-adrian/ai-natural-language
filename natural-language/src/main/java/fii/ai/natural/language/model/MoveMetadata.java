@@ -20,6 +20,7 @@ public class MoveMetadata {
 
     private String state;
 
+    private String promoteToPiece;
 
     public String getCastlingState() {
         return castlingState;
@@ -83,5 +84,13 @@ public class MoveMetadata {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getPromoteToPiece() {
+        return promoteToPiece;
+    }
+
+    public void setPromoteToPiece(String promoteToPiece) {
+        this.promoteToPiece = promoteToPiece;
     }
 }

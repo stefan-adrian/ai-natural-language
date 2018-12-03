@@ -38,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
         decorateWithIfCheckComment(moveMetadata, move);
         decorateWithIfPossibleEnPassantComment(moveMetadata, move);
         decorateWithGameStateComment(moveMetadata, move);
+        decorateWithPromotionComment(moveMetadata, move);
     }
 
     private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata, Node move) {
@@ -152,6 +153,13 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    private void decorateWithPromotionComment(MoveMetadata moveMetadata, Node move) {
+        if (moveMetadata.getPromoteToPiece() != null) {
+            String comment = "The pawn was promoted to " + moveMetadata.getPromoteToPiece();
+            move.getComments().add(comment);
+        }
+    }
+
     private MoveMetadata mapMetadataListToMoveMetadata(List<Metadata> metadatas) {
         MoveMetadata moveMetadata = new MoveMetadata();
         for (Metadata metadata : metadatas) {
@@ -196,7 +204,11 @@ public class CommentServiceImpl implements CommentService {
                     moveMetadata.setCheckPieces(checkMetadata.getCheckPieces());
                     break;
                 }
-
+                case "Promotion": {
+                    PromotionMetadata promotionMetadata = (PromotionMetadata) metadata;
+                    moveMetadata.setPromoteToPiece(promotionMetadata.getPromotedToPiece());
+                    break;
+                }
 
             }
         }

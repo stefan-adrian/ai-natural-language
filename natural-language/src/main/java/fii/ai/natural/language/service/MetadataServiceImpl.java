@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fii.ai.natural.language.model.metadata.*;
 import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,6 @@ import fii.ai.natural.language.model.Metadata;
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
-import fii.ai.natural.language.model.metadata.CastlingStateMetadata;
-import fii.ai.natural.language.model.metadata.CheckMetadata;
-import fii.ai.natural.language.model.metadata.EnPassantMetadata;
-import fii.ai.natural.language.model.metadata.GameStateMetadata;
-import fii.ai.natural.language.model.metadata.MoveGradeMetadata;
-import fii.ai.natural.language.model.metadata.PieceColorMetadata;
-import fii.ai.natural.language.model.metadata.PieceNameMetadata;
-import fii.ai.natural.language.model.metadata.PieceTakenMetadata;
 
 import static java.lang.Math.abs;
 
@@ -101,6 +94,7 @@ public class MetadataServiceImpl implements MetadataService {
         updateEnPassantMetadata(board, move, nodeMetadata);
         updateCheckMetadata(board, move, nodeMetadata);
         updateCastlingMetadata(board, move, nodeMetadata);
+        updatePromotionMetadata(move, nodeMetadata);
     }
 
     private void updatePieceNameMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
@@ -212,5 +206,11 @@ public class MetadataServiceImpl implements MetadataService {
                 meta = new CastlingStateMetadata(null);
         }
         nodeMetadata.add(meta);
+    }
+
+    private void updatePromotionMetadata(Move move, List<Metadata> nodeMetadata) {
+        if (move.getPromotion().getPieceType() != null) {
+            nodeMetadata.add(new PromotionMetadata(move.getPromotion().getPieceType().value()));
+        }
     }
 }
