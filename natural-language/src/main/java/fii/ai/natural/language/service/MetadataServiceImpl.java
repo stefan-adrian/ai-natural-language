@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.stereotype.Service;
 
 import com.github.bhlangonijr.chesslib.Board;
@@ -127,19 +128,12 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     private void updateMoveGradeMetadata(Board board, Move move, List<Metadata> nodeMetadata, double score) {
-        // this is subject to change, eventually
-        // 0 \in [0,0.1)
-        // 1 \in [0.1,0.3)
-        // 2 \in [0.3,0.6)
-        // 3 \in [0.6,1]
-        if (abs(score) < 0.1) {
+        if (abs(score) < ScoreInfo.getSmallImpactMove()) {
             nodeMetadata.add(new MoveGradeMetadata(0));
-        } else if (abs(score) < 0.3) {
+        } else if (abs(score) < ScoreInfo.getMediumImpactMove()) {
             nodeMetadata.add(new MoveGradeMetadata(signum(score)));
-        } else if (abs(score) < 0.7) {
-            nodeMetadata.add(new MoveGradeMetadata(signum(score) * 2));
         } else {
-            nodeMetadata.add(new MoveGradeMetadata(signum(score) * 3));
+            nodeMetadata.add(new MoveGradeMetadata(signum(score) * 2));
         }
     }
 

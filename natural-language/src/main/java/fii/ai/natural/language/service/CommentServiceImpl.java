@@ -50,9 +50,6 @@ public class CommentServiceImpl implements CommentService {
         int moveGrade = moveMetadata.getMoveGrade();
         String impact = "";
         switch (moveGrade) {
-            case -3:
-                impact = " massive disadvantage ";
-                break;
             case -2:
                 impact = " big disadvantage ";
                 break;
@@ -67,9 +64,6 @@ public class CommentServiceImpl implements CommentService {
                 break;
             case 2:
                 impact = " big advantage ";
-                break;
-            case 3:
-                impact = " massive advantage ";
                 break;
         }
         String comment = "";
