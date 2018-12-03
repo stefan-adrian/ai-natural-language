@@ -28,6 +28,8 @@ import static java.lang.Math.abs;
 public class MetadataServiceImpl implements MetadataService {
 
     private final Map<String, String> pieceCode;
+    private boolean whiteStartedPlayingForEqual = false;
+    private boolean blackStartedPlayingForEqual = false;
 
     public MetadataServiceImpl() {
         pieceCode = new HashMap<>();
@@ -45,24 +47,24 @@ public class MetadataServiceImpl implements MetadataService {
         start.loadFromFen(initialPosition);
 
         if (movesTree.getMainVariant() != null) {
-            decorateVariant(start.clone(), movesTree.getMainVariant());
+            decorateVariant(start.clone(), movesTree.getMainVariant(), true);
         }
     }
 
-    private void decorateVariant(Board board, MoveVariant variant) {
+    private void decorateVariant(Board board, MoveVariant variant, boolean decorateForMainVariantOnly) {
         for (Node node : variant.getMoves()) {
             // get move
             String moveString = node.getMove();
             Move move = moveFromText(moveString);
 
             // decorate node with metadata
-            updateMetadata(board, move, node.getMetadata(), node.getScore());
+            updateMetadata(board, move, node.getMetadata(), node.getScore(), decorateForMainVariantOnly);
 
             // check for variants
             List<MoveVariant> variants = node.getVariants();
             if (variants != null) {
                 for (MoveVariant subvariant : variants) {
-                    decorateVariant(board.clone(), subvariant);
+                    decorateVariant(board.clone(), subvariant, false);
                 }
             }
 
@@ -85,7 +87,7 @@ public class MetadataServiceImpl implements MetadataService {
         return new Move(from, to);
     }
 
-    private void updateMetadata(Board board, Move move, List<Metadata> nodeMetadata, double score) {
+    private void updateMetadata(Board board, Move move, List<Metadata> nodeMetadata, double score, boolean decorateForMainVariantOnly) {
         updatePieceNameMetadata(board, move, nodeMetadata);
         updatePieceColorMetadata(board, move, nodeMetadata);
         updatePieceTakenMetadata(board, move, nodeMetadata);
@@ -95,6 +97,9 @@ public class MetadataServiceImpl implements MetadataService {
         updateCheckMetadata(board, move, nodeMetadata);
         updateCastlingMetadata(board, move, nodeMetadata);
         updatePromotionMetadata(move, nodeMetadata);
+        if(decorateForMainVariantOnly) {
+            updateEqualScopeMetadata(board, move, nodeMetadata, score);
+        }
     }
 
     private void updatePieceNameMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
@@ -212,5 +217,29 @@ public class MetadataServiceImpl implements MetadataService {
         if (move.getPromotion().getPieceType() != null) {
             nodeMetadata.add(new PromotionMetadata(move.getPromotion().getPieceType().value()));
         }
+    }
+
+    private void updateEqualScopeMetadata(Board board, Move move, List<Metadata> nodeMetadata, double score) {
+        if (updateAndGetEqualStateByColor(board, move, score)) {
+            nodeMetadata.add(new EqualScopeMetadata(true));
+        }
+    }
+
+    private boolean updateAndGetEqualStateByColor(Board board, Move move, double score) {
+        Piece piece = board.getPiece(move.getFrom());
+        String color = piece.getPieceSide().value();
+        if (color.equals("WHITE")) {
+            if (score <= ScoreInfo.getEqualLimit()) {
+                whiteStartedPlayingForEqual = true;
+            }
+            return whiteStartedPlayingForEqual;
+        }
+        if (color.equals("BLACK")) {
+            if (score <= ScoreInfo.getEqualLimit()) {
+                blackStartedPlayingForEqual = true;
+            }
+            return blackStartedPlayingForEqual;
+        }
+        return false;
     }
 }

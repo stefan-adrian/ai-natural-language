@@ -22,6 +22,8 @@ public class MoveMetadata {
 
     private String promoteToPiece;
 
+    private Boolean equalScope = false;
+
     public String getCastlingState() {
         return castlingState;
     }
@@ -92,5 +94,13 @@ public class MoveMetadata {
 
     public void setPromoteToPiece(String promoteToPiece) {
         this.promoteToPiece = promoteToPiece;
+    }
+
+    public Boolean getEqualScope() {
+        return equalScope;
+    }
+
+    public void setEqualScope(Boolean equalScope) {
+        this.equalScope = equalScope;
     }
 }

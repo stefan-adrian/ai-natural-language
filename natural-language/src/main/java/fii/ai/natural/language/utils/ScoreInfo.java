@@ -10,7 +10,7 @@ public class ScoreInfo {
      * For example since black wins at -1 if the score is bigger than equalLimit the black side will start to play
      * with a strategy for equal
      */
-    private static final Double equalLimit = 0.8;
+    private static final Double equalLimit = -0.8;
 
     /**
      * If a move has a impact on the score bigger than smallImpactMove and smaller than mediumImpactMove then it means

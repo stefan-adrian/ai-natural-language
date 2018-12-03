@@ -39,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
         decorateWithIfPossibleEnPassantComment(moveMetadata, move);
         decorateWithGameStateComment(moveMetadata, move);
         decorateWithPromotionComment(moveMetadata, move);
+        decorateWithEqualScopeComment(movesTree,indexOfMove,moveMetadata,move);
     }
 
     private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata, Node move) {
@@ -160,6 +161,17 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    private void decorateWithEqualScopeComment(MovesTree movesTree, int indexOfMove,MoveMetadata moveMetadata, Node move){
+        if (indexOfMove - 2 >= 0) {
+            Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 2);
+            MoveMetadata precedentMoveMetadata = mapMetadataListToMoveMetadata(precedentMove.getMetadata());
+            if(moveMetadata.getEqualScope()!=precedentMoveMetadata.getEqualScope()){
+                move.getComments().add("Because of the big disadvantage "+moveMetadata.getColor()+" started playing in scope of equal.");
+            }
+        }
+
+    }
+
     private MoveMetadata mapMetadataListToMoveMetadata(List<Metadata> metadatas) {
         MoveMetadata moveMetadata = new MoveMetadata();
         for (Metadata metadata : metadatas) {
@@ -209,7 +221,11 @@ public class CommentServiceImpl implements CommentService {
                     moveMetadata.setPromoteToPiece(promotionMetadata.getPromotedToPiece());
                     break;
                 }
-
+                case "EqualScope": {
+                    EqualScopeMetadata equalScopeMetadata = (EqualScopeMetadata) metadata;
+                    moveMetadata.setEqualScope(equalScopeMetadata.getPlayingForEqual());
+                    break;
+                }
             }
         }
         return moveMetadata;
