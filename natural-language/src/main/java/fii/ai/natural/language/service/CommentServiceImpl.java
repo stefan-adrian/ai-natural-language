@@ -226,6 +226,11 @@ public class CommentServiceImpl implements CommentService {
                     moveMetadata.setEqualScope(equalScopeMetadata.getPlayingForEqual());
                     break;
                 }
+                case "PreCheckMate": {
+                    PreCheckMateMetadata preCheckMateMetadata = (PreCheckMateMetadata) metadata;
+                    moveMetadata.setPreCheckMate(preCheckMateMetadata.getPreCheckMate());
+                    break;
+                }
             }
         }
         return moveMetadata;

@@ -24,6 +24,8 @@ public class MoveMetadata {
 
     private Boolean equalScope = false;
 
+    private Boolean preCheckMate=false;
+
     public String getCastlingState() {
         return castlingState;
     }
@@ -102,5 +104,13 @@ public class MoveMetadata {
 
     public void setEqualScope(Boolean equalScope) {
         this.equalScope = equalScope;
+    }
+
+    public Boolean getPreCheckMate() {
+        return preCheckMate;
+    }
+
+    public void setPreCheckMate(Boolean preCheckMate) {
+        this.preCheckMate = preCheckMate;
     }
 }

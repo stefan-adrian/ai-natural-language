@@ -97,6 +97,7 @@ public class MetadataServiceImpl implements MetadataService {
         updateCheckMetadata(board, move, nodeMetadata);
         updateCastlingMetadata(board, move, nodeMetadata);
         updatePromotionMetadata(move, nodeMetadata);
+        updatePreCheckMateMetadata(nodeMetadata,score);
         if(decorateForMainVariantOnly) {
             updateEqualScopeMetadata(board, move, nodeMetadata, score);
         }
@@ -241,5 +242,11 @@ public class MetadataServiceImpl implements MetadataService {
             return blackStartedPlayingForEqual;
         }
         return false;
+    }
+
+    private void updatePreCheckMateMetadata(List<Metadata> nodeMetadata, double score){
+        if(score>=ScoreInfo.getCheckMateLimit()){
+            nodeMetadata.add(new PreCheckMateMetadata(true));
+        }
     }
 }
