@@ -370,3 +370,10 @@ daca definim bine ce intra in task si ce iese, putem sa le executam separat de c
  - <b>enPassant</b> o sa fie un camp de tip boolean care va indicat daca dupa mutarea facuta adversarul va poate face enPassant
  - <b>gameState</b> o sa fie un camp de tip String care va avea valoarea equal daca dupa aceasta mutare jocul a ajuns sa fie egal, checkmate daca aceasta mutarea cauzeaza castigarea jocului si null altfel
  - <b>check</b> o sa fie o lista de sringuri in care se vor gasi piesele care dau sah la rege
+ - <b>promotion</b> o sa fie un camp String care o sa aiba numele piesei in care promoveaza pionul si null in caz ca nu a avut loc nici o promovare
+ - <b>equalScope</b> o sa fie un camp te tip boolean care o sa fie true daca culoarea actuala joaca in scopul de a face egal(in caz ca a ajuns intr-un dezavantaj prea mare pentru a mai putea castiga) si false in caz contrar. Decorarea se face doar pentru varianta principala, nu si pentru celelalte variante.
+ - <b>preCheckeMate</b> o sa fie un camp de tip boolean care indica daca se poate da sahMat exact dupa mutarea asta
+ 
+ ## Informatii scor
+ Am creat o clasa <b>ScoreInfo</b> cu campuri statice si get-uri in care sunt definite limitele pentru ceea ce inseamna miscare buna/proasta, limita pentru jucat la egal si limita pentru care o sa stim ca jocul ii la distanta de o mutare de sah mat.
+ Scopul acestei clase este ca nu stim inca detaliile exacte despre scor deci o sa folosim constantele din clase dupa care cand aflam detaliile exact vom putea actualiza aici doar.
