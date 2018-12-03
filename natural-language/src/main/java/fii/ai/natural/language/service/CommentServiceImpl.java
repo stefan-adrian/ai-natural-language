@@ -35,9 +35,9 @@ public class CommentServiceImpl implements CommentService {
         decorateWithImpactOnGameComment(moveMetadata, move);
         decorateWithCommentIfPieceWasTaken(moveMetadata, move);
         decorateWithCastlingPossibilityComment(movesTree, indexOfMove, moveMetadata, move);
-        //decorateWithIfCheckComment(moveMetadata, move);
-        //decorateWithIfPossibleEnPassantComment(moveMetadata, move);
-        //decorateWithGameStateComment(moveMetadata, move);
+        decorateWithIfCheckComment(moveMetadata, move);
+        decorateWithIfPossibleEnPassantComment(moveMetadata, move);
+        decorateWithGameStateComment(moveMetadata, move);
     }
 
     private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata, Node move) {
@@ -51,25 +51,25 @@ public class CommentServiceImpl implements CommentService {
         String impact = "";
         switch (moveGrade) {
             case -3:
-                impact = " massive disadvantage after that move ";
+                impact = " massive disadvantage ";
                 break;
             case -2:
-                impact = " big disadvantage after that move ";
+                impact = " big disadvantage ";
                 break;
             case -1:
-                impact = " slightly disadvantage after that move ";
+                impact = " slightly disadvantage ";
                 break;
             case 0:
                 impact = " no apparent impact on the game ";
                 break;
             case 1:
-                impact = " slightly advantage after that move ";
+                impact = " slightly advantage ";
                 break;
             case 2:
-                impact = " big advantage after that move ";
+                impact = " big advantage ";
                 break;
             case 3:
-                impact = " massive advantage after that move ";
+                impact = " massive advantage ";
                 break;
         }
         String comment = "";
@@ -88,24 +88,24 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void decorateWithCastlingPossibilityComment(MovesTree movesTree, int indexOfMove, MoveMetadata moveMetadata, Node move) {
-        if(indexOfMove-2>=0) {
+        if (indexOfMove - 2 >= 0) {
             Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 2);
             MoveMetadata precedentMoveMetadata = mapMetadataListToMoveMetadata(precedentMove.getMetadata());
             String currentCastlingState = moveMetadata.getCastlingState();
             String castlingStateComment = null;
             if (currentCastlingState == null && precedentMoveMetadata.getCastlingState() != null) {
-                castlingStateComment = moveMetadata.getColor() + " can not do castling any more on either side.";
+                castlingStateComment = moveMetadata.getColor() + " can't do castling any more on either side.";
             } else {
-                if(currentCastlingState!=null && !currentCastlingState.equals(precedentMoveMetadata.getCastlingState())) {
+                if (currentCastlingState != null && !currentCastlingState.equals(precedentMoveMetadata.getCastlingState())) {
                     switch (currentCastlingState) {
                         case "kq":
                             castlingStateComment = moveMetadata.getColor() + " can do castling on both sides (of the king and of the queen)";
                             break;
                         case "q":
-                            castlingStateComment = moveMetadata.getColor() + " can do castling on the side of the queen";
+                            castlingStateComment = moveMetadata.getColor() + " can do castling only on the side of the queen after this move";
                             break;
                         case "k":
-                            castlingStateComment = moveMetadata.getColor() + " can do castling on the side of the king";
+                            castlingStateComment = moveMetadata.getColor() + " can do castling only on the side of the king after this move";
                             break;
                     }
                 }
@@ -118,11 +118,11 @@ public class CommentServiceImpl implements CommentService {
 
     private void decorateWithIfPossibleEnPassantComment(MoveMetadata moveMetadata, Node move) {
         boolean possible = moveMetadata.getEnPassantPossible();
-        String comment=null;
-        if(possible) {
+        String comment = null;
+        if (possible) {
             comment = moveMetadata.getColor() + " side can do en-passant move. ";
         }
-        if(comment!=null) {
+        if (comment != null) {
             move.getComments().add(comment);
         }
     }
@@ -130,14 +130,14 @@ public class CommentServiceImpl implements CommentService {
     private void decorateWithIfCheckComment(MoveMetadata moveMetadata, Node move) {
         List<String> checkPieces = moveMetadata.getCheckPieces();
         String comment = null;
-        if(checkPieces != null) {
-            comment =  moveMetadata.getColor() + " side checked the opponent from the piece(s): ";
-            for(String i : checkPieces) {
+        if (checkPieces != null) {
+            comment = moveMetadata.getColor() + " side checked the opponent from the piece(s): ";
+            for (String i : checkPieces) {
                 comment += i;
                 comment += "; ";
             }
         }
-        if(comment != null) {
+        if (comment != null) {
             move.getComments().add(comment);
         }
     }
@@ -145,22 +145,22 @@ public class CommentServiceImpl implements CommentService {
     private void decorateWithGameStateComment(MoveMetadata moveMetadata, Node move) {
         String state = moveMetadata.getState();
         String comment = null;
-        if(state != null) {
-            if(state == "equal") {
+        if (state != null) {
+            if (state.equals("equal")) {
                 comment = "Game finished as a draw.";
             }
-            if(state == "checkmate") {
+            if (state.equals("checkmate")) {
                 comment = moveMetadata.getColor() + " side won the game.";
             }
         }
-        if(comment != null) {
+        if (comment != null) {
             move.getComments().add(comment);
         }
     }
 
-    private MoveMetadata mapMetadataListToMoveMetadata(List<Metadata> metadatas){
-        MoveMetadata moveMetadata=new MoveMetadata();
-        for(Metadata metadata:metadatas){
+    private MoveMetadata mapMetadataListToMoveMetadata(List<Metadata> metadatas) {
+        MoveMetadata moveMetadata = new MoveMetadata();
+        for (Metadata metadata : metadatas) {
             switch (metadata.getKey()) {
                 case "CastlingState": {
                     CastlingStateMetadata castlingStateMetadata = (CastlingStateMetadata) metadata;
