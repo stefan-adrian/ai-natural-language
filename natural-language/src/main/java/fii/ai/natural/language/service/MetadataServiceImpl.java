@@ -1,5 +1,6 @@
 package fii.ai.natural.language.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +8,10 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.github.bhlangonijr.chesslib.Board;
+import com.github.bhlangonijr.chesslib.CastleRight;
 import com.github.bhlangonijr.chesslib.Piece;
+import com.github.bhlangonijr.chesslib.PieceType;
+import com.github.bhlangonijr.chesslib.Side;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 
@@ -15,6 +19,9 @@ import fii.ai.natural.language.model.Metadata;
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
+import fii.ai.natural.language.model.metadata.CastlingStateMetadata;
+import fii.ai.natural.language.model.metadata.CheckMetadata;
+import fii.ai.natural.language.model.metadata.EnPassantMetadata;
 import fii.ai.natural.language.model.metadata.GameStateMetadata;
 import fii.ai.natural.language.model.metadata.MoveGradeMetadata;
 import fii.ai.natural.language.model.metadata.PieceColorMetadata;
@@ -122,23 +129,77 @@ public class MetadataServiceImpl implements MetadataService {
     private void updateGameStateMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
         Board result = board.clone();
         result.doMove(move);
-        if(result.isDraw()) {
+        if (result.isDraw()) {
             nodeMetadata.add(new GameStateMetadata("equal"));
         }
-        if(result.isMated()) {
+        if (result.isMated()) {
             nodeMetadata.add(new GameStateMetadata("checkmate"));
         }
     }
 
     private void updateEnPassantMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
-        // TODO
+        Board after = board.clone();
+        after.doMove(move);
+        boolean ep = !after.getEnPassant().equals(Square.NONE);
+        if (ep) {
+            ep = false;
+            Square[] sides = after.getEnPassant().getSideSquares();
+            for (Square side : sides) {
+                Side pside = board.getPiece(side).getPieceSide();
+                PieceType ptype = board.getPiece(side).getPieceType();
+                if (PieceType.PAWN.equals(ptype) && pside.equals(board.getSideToMove())) {
+                    ep = true;
+                    break;
+                }
+            }
+        }
+        nodeMetadata.add(new EnPassantMetadata(ep));
     }
 
     private void updateCheckMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
-        // TODO
+        Board after = board.clone();
+        after.doMove(move);
+        if (after.isKingAttacked()) {
+            Side side = after.getSideToMove();
+            Square kingSquare = after.getKingSquare(side);
+            List<String> attackingPieces = new ArrayList<>();
+            if (after.squareAttackedByPieceType(kingSquare, side.flip(), PieceType.QUEEN) != 0) {
+                attackingPieces.add("queen");
+            }
+            if (after.squareAttackedByPieceType(kingSquare, side.flip(), PieceType.BISHOP) != 0) {
+                attackingPieces.add("bishop");
+            }
+            if (after.squareAttackedByPieceType(kingSquare, side.flip(), PieceType.KNIGHT) != 0) {
+                attackingPieces.add("knight");
+            }
+            if (after.squareAttackedByPieceType(kingSquare, side.flip(), PieceType.ROOK) != 0) {
+                attackingPieces.add("rook");
+            }
+            if (after.squareAttackedByPieceType(kingSquare, side.flip(), PieceType.PAWN) != 0) {
+                attackingPieces.add("pawn");
+            }
+            nodeMetadata.add(new CheckMetadata(attackingPieces));
+        }
     }
 
     private void updateCastlingMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
-        // TODO
+        Board after = board.clone();
+        after.doMove(move);
+        CastleRight castleRight = after.getCastleRight(after.getSideToMove());
+        CastlingStateMetadata meta = null;
+        switch (castleRight) {
+            case KING_AND_QUEEN_SIDE:
+                meta = new CastlingStateMetadata("kq");
+                break;
+            case KING_SIDE:
+                meta = new CastlingStateMetadata("k");
+                break;
+            case QUEEN_SIDE:
+                meta = new CastlingStateMetadata("q");
+                break;
+            default:
+                meta = new CastlingStateMetadata(null);
+        }
+        nodeMetadata.add(meta);
     }
 }
