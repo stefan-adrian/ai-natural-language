@@ -7,6 +7,7 @@ import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.Node;
 import fii.ai.natural.language.model.MovePosition;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 

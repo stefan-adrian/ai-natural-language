@@ -35,7 +35,7 @@ public class TreeMapper {
         return moveVariant;
     }
 
-    private List<MoveVariant> mapInputVariantsForVariantsInsideEachMove(List<InputVariant> nodeVariants){
+    private List<MoveVariant> mapInputVariantsForVariantsInsideEachMove(List<InputVariant> nodeVariants) {
         List<MoveVariant> moveVariants = new ArrayList<>();
         for (InputVariant inputVariantForNode : nodeVariants) {
             MoveVariant moveVariantForNode = new MoveVariant();

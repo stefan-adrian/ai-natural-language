@@ -25,6 +25,7 @@ public class GameController {
     /**
      * This method maps the inputTree to a MovesTree and after gonna call(when implemented) commentMovesTree method from gameService
      * to generate comments for the inputTree
+     *
      * @param inputTree represents the input that is a complete chess game
      * @return the return value gonna be changed to a List of comments
      */

@@ -10,13 +10,12 @@ public class InputNode {
      * - start field, algebraic notation ex: 'e2'
      * - end field, algebraic notation ex: 'e4'
      * - in case the pawn is at the end of the table the chess piece to be switch with qrbn
-     *
+     * <p>
      * Examples:
-     *  we2e4
-     *  be7e5
-     *  wg1f3
-     *  wa7a8q
-     *
+     * we2e4
+     * be7e5
+     * wg1f3
+     * wa7a8q
      */
     private String move;
 

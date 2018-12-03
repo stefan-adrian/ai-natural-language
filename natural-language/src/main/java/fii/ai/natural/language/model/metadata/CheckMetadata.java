@@ -14,6 +14,7 @@ public class CheckMetadata implements Metadata {
     public CheckMetadata(List<String> checkPieces) {
         this.checkPieces = checkPieces;
     }
+
     public List<String> getCheckPieces() {
         return checkPieces;
     }

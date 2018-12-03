@@ -134,14 +134,13 @@ public class MetadataServiceImpl implements MetadataService {
         // 3 \in [0.6,1]
         if (abs(score) < 0.1) {
             nodeMetadata.add(new MoveGradeMetadata(0));
-        }
-        if (abs(score) < 0.3) {
+        } else if (abs(score) < 0.3) {
             nodeMetadata.add(new MoveGradeMetadata(signum(score)));
-        }
-        if (abs(score) < 0.7) {
+        } else if (abs(score) < 0.7) {
             nodeMetadata.add(new MoveGradeMetadata(signum(score) * 2));
+        } else {
+            nodeMetadata.add(new MoveGradeMetadata(signum(score) * 3));
         }
-        nodeMetadata.add(new MoveGradeMetadata(signum(score * 3)));
     }
 
     private void updateGameStateMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
