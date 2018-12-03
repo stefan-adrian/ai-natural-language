@@ -1,7 +1,6 @@
 package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveComment;
-import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +15,14 @@ import java.util.List;
 @Service
 public class GameService {
 
+    private MetadataService metadataService;
     private CommentService commentService;
     private List<MoveComment> moveCommentList;
 
     @Autowired
-    public GameService(CommentService commentService) {
+    public GameService(CommentService commentService, MetadataService metadataService) {
         this.commentService = commentService;
+        this.metadataService = metadataService;
     }
 
     /**
@@ -34,7 +35,6 @@ public class GameService {
      */
 
     public List<MoveComment> commentMovesTree(MovesTree movesTree) {
-        decorateMovesTree(movesTree);
 
         //This commented code is only yo check to test comment functionality until the real decoration with metadata is made
         /*movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceColorMetadata("White"));
@@ -48,24 +48,9 @@ public class GameService {
         movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new MoveGradeMetadata(1));
         movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new CastlingStateMetadata("k"));*/
 
+        metadataService.decorateWithMetadata(movesTree);
         commentService.commentMovesTree(movesTree);
         return concatentateComments(movesTree);
-    }
-
-    private void decorateMovesTree(MovesTree movesTree) {
-        for (int index = 0; index < movesTree.getMainVariant().getMoves().size(); index++) {
-            MovesTree partialMovesTree = getMovesTreeUpToGivenIndex(movesTree, index);
-            // TODO create and call method that does the decoration of the partialMovesTree with metadata(generate metadata for sub-problem)
-        }
-    }
-
-    private MovesTree getMovesTreeUpToGivenIndex(MovesTree movesTree, int index) {
-        MovesTree partialMovesTree = new MovesTree();
-        partialMovesTree.setMainVariant(new MoveVariant());
-        partialMovesTree.setInitialStateFEN(movesTree.getInitialStateFEN());
-        partialMovesTree.getMainVariant().setMoves(new ArrayList<>(movesTree.getMainVariant().getMoves()));
-        partialMovesTree.getMainVariant().getMoves().subList(index + 1, partialMovesTree.getMainVariant().getMoves().size()).clear();
-        return partialMovesTree;
     }
 
     private List<MoveComment> concatentateComments(MovesTree movesTree) {
@@ -75,5 +60,4 @@ public class GameService {
         }
         return moveCommentList;
     }
-
 }
