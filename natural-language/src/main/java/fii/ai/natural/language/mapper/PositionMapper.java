@@ -24,7 +24,8 @@ public class PositionMapper {
 
         for (InputVariant inputVariant : inputTree.getVariants()) {
             MoveVariant moveVariant = new MoveVariant();
-            moveVariant.setStrategyName(inputVariant.getStrategyName());
+            moveVariant.setAlgorithmName(inputVariant.getAlgorithmName());
+            moveVariant.setStrategyNames(inputVariant.getStrategyNames());
             for (InputNode inputNode : inputVariant.getMoves()) {
                 Node node = new Node();
                 node.setMove(inputNode.getMove());

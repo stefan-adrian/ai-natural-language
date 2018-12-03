@@ -31,7 +31,6 @@ public class TreeMapper {
             moves.add(node);
         }
         moveVariant.setMoves(moves);
-        moveVariant.setStrategyName(inputVariant.getStrategyName());
         return moveVariant;
     }
 
@@ -39,7 +38,8 @@ public class TreeMapper {
         List<MoveVariant> moveVariants = new ArrayList<>();
         for (InputVariant inputVariantForNode : nodeVariants) {
             MoveVariant moveVariantForNode = new MoveVariant();
-            moveVariantForNode.setStrategyName(inputVariantForNode.getStrategyName());
+            moveVariantForNode.setAlgorithmName(inputVariantForNode.getAlgorithmName());
+            moveVariantForNode.setStrategyNames(inputVariantForNode.getStrategyNames());
             List<Node> nodes = new ArrayList<>();
             for (InputNode inputNodeForNode : inputVariantForNode.getMoves()) {
                 Node nodeForVariants = new Node();

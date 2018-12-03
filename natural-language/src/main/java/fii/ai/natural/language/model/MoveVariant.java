@@ -10,9 +10,14 @@ public class MoveVariant {
     private List<Node> moves;
 
     /**
-     * Strategy used for this variant ex:MinMax, AlfaBeta. For the mainVariant si null.
+     * Algorithm used for this variant ex:MinMax, AlfaBeta. For the mainVariant si null.
      */
-    private String strategyName;
+    private String algorithmName;
+
+    /**
+     * Strategies like PieceRemained, AttackPieces
+     */
+    private List<String> strategyNames;
 
     public List<Node> getMoves() {
         return moves;
@@ -22,11 +27,19 @@ public class MoveVariant {
         this.moves = moves;
     }
 
-    public String getStrategyName() {
-        return strategyName;
+    public String getAlgorithmName() {
+        return algorithmName;
     }
 
-    public void setStrategyName(String strategyName) {
-        this.strategyName = strategyName;
+    public void setAlgorithmName(String algorithmName) {
+        this.algorithmName = algorithmName;
+    }
+
+    public List<String> getStrategyNames() {
+        return strategyNames;
+    }
+
+    public void setStrategyNames(List<String> strategyNames) {
+        this.strategyNames = strategyNames;
     }
 }

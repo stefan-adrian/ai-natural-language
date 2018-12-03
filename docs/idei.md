@@ -140,7 +140,10 @@ O pozitie initiala si variantele posibile de mutari din acea pozitie:
                               }
                           ],
                           "algorithmName": "MinMax",
-                          "strategyName": "PawnAdvancement"
+                          "strategyNames": [
+                              "PieceRemained",
+                              "AttackPieces"
+                          ]
                       },
                       {
                           "moves": [
@@ -154,7 +157,9 @@ O pozitie initiala si variantele posibile de mutari din acea pozitie:
                               }
                           ],
                           "algorithmName": "AlfaBeta",
-                          "strategyName": "PawnAdvancement"
+                          "strategyNames": [
+                              "PieceRemained"
+                          ]
                       }
                   ] 
 }
@@ -183,7 +188,10 @@ Un joc cu mutari alternative:
                             }
                         ],
                         "algorithmName": "MinMax",
-                        "strategyName": "PawnAdvancement"
+                        "strategyNames": [
+                            "PieceRemained",
+                            "AttackPieces"
+                        ]
                     },
                     {
                         "moves": [
@@ -197,7 +205,9 @@ Un joc cu mutari alternative:
                             }
                         ],
                         "algorithmName": "AlfaBeta",
-                        "strategyName": "PawnAdvancement"
+                        "strategyNames": [
+                            "PieceRemained"
+                        ]
                     }
                 ]
             },
@@ -213,7 +223,10 @@ Un joc cu mutari alternative:
                             }
                         ],
                         "algorithmName": "AlfaBeta",
-                        "strategyName": "PawnAdvancement"
+                        "strategyNames": [
+                            "PieceRemained",
+                            "AttackPieces"
+                        ]
                     },
                     {
                         "moves": [
@@ -227,7 +240,9 @@ Un joc cu mutari alternative:
                             }
                         ],
                         "algorithmName": "MinMax",
-                        "strategyName": "PawnAdvancement"
+                        "strategyNames": [
+                            "PieceRemained"
+                        ]
                     }
                 ]
             }
