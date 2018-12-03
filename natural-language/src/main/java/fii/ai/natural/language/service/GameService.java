@@ -2,10 +2,12 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveComment;
 import fii.ai.natural.language.model.MovesTree;
+import fii.ai.natural.language.model.metadata.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,15 +40,24 @@ public class GameService {
 
         //This commented code is only yo check to test comment functionality until the real decoration with metadata is made
         /*movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceColorMetadata("White"));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceNameMetadata("King"));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceNameMetadata("Queen"));
         movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceTakenMetadata("Queen"));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new MoveGradeMetadata(3));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new EnPassantMetadata(true));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new CheckMetadata(Arrays.asList("Queen")));
+        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new MoveGradeMetadata(2));
         movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new CastlingStateMetadata("kq"));
 
         movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new PieceColorMetadata("Black"));
-        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new PieceNameMetadata("Queen"));
-        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new MoveGradeMetadata(1));
-        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new CastlingStateMetadata("k"));*/
+        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new PieceNameMetadata("King"));
+        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new MoveGradeMetadata(-2));
+
+        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new PieceColorMetadata("White"));
+        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new PieceNameMetadata("Queen"));
+        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new CheckMetadata(Arrays.asList("Queen")));
+        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new MoveGradeMetadata(3));
+        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new CastlingStateMetadata("q"));
+        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new GameStateMetadata("checkmate"));*/
+
 
         metadataService.decorateWithMetadata(movesTree);
         commentService.commentMovesTree(movesTree);
