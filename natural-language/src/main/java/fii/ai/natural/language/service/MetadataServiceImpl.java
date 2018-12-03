@@ -47,16 +47,34 @@ public class MetadataServiceImpl implements MetadataService {
     public void decorateWithMetadata(MovesTree movesTree) {
 
         String initialPosition = movesTree.getInitialStateFEN();
-        MoveVariant mainVariant = movesTree.getMainVariant();
+        Board start = new Board();
+        start.loadFromFen(initialPosition);
 
-        Board board = new Board();
-        board.loadFromFen(initialPosition);
+        if (movesTree.getMainVariant() != null) {
+            decorateVariant(start.clone(), movesTree.getMainVariant());
+        }
+    }
 
-        for (Node node : mainVariant.getMoves()) {
+    private void decorateVariant(Board board, MoveVariant variant) {
+        for (Node node : variant.getMoves()) {
+            // get move
             String moveString = node.getMove();
             Move move = moveFromText(moveString);
-            List<Metadata> nodeMetadata = node.getMetadata();
-            updateMetadata(board, move, nodeMetadata, node.getScore());
+
+            // decorate node with metadata
+            updateMetadata(board, move, node.getMetadata(), node.getScore());
+
+            // check for variants
+            List<MoveVariant> variants = node.getVariants();
+            if (variants != null) {
+                for (MoveVariant subvariant : variants) {
+                    decorateVariant(board.clone(), subvariant);
+                }
+            }
+
+            // update the board with given move and continue the variant
+            board = board.clone();
+            board.doMove(move);
         }
     }
 
