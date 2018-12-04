@@ -1,5 +1,6 @@
 package fii.ai.natural.language.service;
 
+import fii.ai.natural.language.model.MovePosition;
 import fii.ai.natural.language.model.MovesTree;
 
 /**
@@ -8,4 +9,6 @@ import fii.ai.natural.language.model.MovesTree;
 public interface MetadataService {
 
     void decorateWithMetadata(MovesTree movesTree);
+
+    public void decorateWithMetadataOptimalMoves(MovePosition movePosition);
 }

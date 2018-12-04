@@ -2,6 +2,7 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.mapper.MetadataMapper;
 import fii.ai.natural.language.model.MoveMetadata;
+import fii.ai.natural.language.model.MovePosition;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,19 @@ public class CommentServiceImpl implements CommentService {
         return movesTree;
     }
 
+    @Override
+    public MovePosition commentMovesTreeOptimalMoves(MovePosition movePosition) {
+        for (int index = 0; index < movePosition.getVariants().size(); index++) {
+            commentOptimalMove(movePosition, index);
+        }
+        return movePosition;
+    }
+
+    private void commentOptimalMove(MovePosition movePosition, int index) {
+        List<Node> move = movePosition.getVariants().get(index).getMoves();
+        //TODO Add comments for every move
+    }
+
     /**
      * This function generates comments for the move for movesTree at the index given
      * The way I thought this method is that will call many more methods that will generate a comment(and add it to comment list)
@@ -46,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
         decorateWithIfPossibleEnPassantComment(moveMetadata, move);
         decorateWithGameStateComment(moveMetadata, move);
         decorateWithPromotionComment(moveMetadata, move);
-        decorateWithEqualScopeComment(movesTree,indexOfMove,moveMetadata,move);
+        decorateWithEqualScopeComment(movesTree, indexOfMove, moveMetadata, move);
     }
 
     private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata, Node move) {
@@ -168,12 +182,12 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    private void decorateWithEqualScopeComment(MovesTree movesTree, int indexOfMove,MoveMetadata moveMetadata, Node move){
+    private void decorateWithEqualScopeComment(MovesTree movesTree, int indexOfMove, MoveMetadata moveMetadata, Node move) {
         if (indexOfMove - 2 >= 0) {
             Node precedentMove = movesTree.getMainVariant().getMoves().get(indexOfMove - 2);
             MoveMetadata precedentMoveMetadata = metadataMapper.map(precedentMove.getMetadata());
-            if(moveMetadata.getEqualScope()!=precedentMoveMetadata.getEqualScope()){
-                move.getComments().add("Because of the big disadvantage "+moveMetadata.getColor()+" started playing in scope of equal.");
+            if (moveMetadata.getEqualScope() != precedentMoveMetadata.getEqualScope()) {
+                move.getComments().add("Because of the big disadvantage " + moveMetadata.getColor() + " started playing in scope of equal.");
             }
         }
 

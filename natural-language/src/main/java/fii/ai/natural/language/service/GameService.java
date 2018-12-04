@@ -1,13 +1,12 @@
 package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveComment;
+import fii.ai.natural.language.model.MovePosition;
 import fii.ai.natural.language.model.MovesTree;
-import fii.ai.natural.language.model.metadata.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -61,13 +60,29 @@ public class GameService {
 
         metadataService.decorateWithMetadata(movesTree);
         commentService.commentMovesTree(movesTree);
-        return concatentateComments(movesTree);
+        return concatenateComments(movesTree);
     }
 
-    private List<MoveComment> concatentateComments(MovesTree movesTree) {
+    private List<MoveComment> concatenateComments(MovesTree movesTree) {
         moveCommentList = new ArrayList<>();
         for (int index = 0; index < movesTree.getMainVariant().getMoves().size(); index++) {
             moveCommentList.add(new MoveComment(index + 1, movesTree.getMainVariant().getMoves().get(index).getComments()));
+        }
+        return moveCommentList;
+    }
+
+    public List<MoveComment> commentOptimalMoves(MovePosition movePosition) {
+        metadataService.decorateWithMetadataOptimalMoves(movePosition);
+        commentService.commentMovesTreeOptimalMoves(movePosition);
+        return concatenateCommentsForOptimalMoves(movePosition);
+    }
+
+    //TODO Check if this actually works right (after the comment generation)
+    private List<MoveComment> concatenateCommentsForOptimalMoves(MovePosition movePosition) {
+        moveCommentList = new ArrayList<>();
+        for (int index = 0; index < movePosition.getVariants().size(); index++) {
+            int finalIndex = index;
+            movePosition.getVariants().forEach(moveVariant -> moveCommentList.add(new MoveComment(finalIndex + 1, moveVariant.getMoves().get(finalIndex).getComments())));
         }
         return moveCommentList;
     }

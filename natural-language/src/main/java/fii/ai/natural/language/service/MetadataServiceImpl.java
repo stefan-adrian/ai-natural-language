@@ -1,26 +1,16 @@
 package fii.ai.natural.language.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.github.bhlangonijr.chesslib.*;
+import com.github.bhlangonijr.chesslib.move.Move;
+import fii.ai.natural.language.model.*;
 import fii.ai.natural.language.model.metadata.*;
 import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.stereotype.Service;
 
-import com.github.bhlangonijr.chesslib.Board;
-import com.github.bhlangonijr.chesslib.CastleRight;
-import com.github.bhlangonijr.chesslib.Piece;
-import com.github.bhlangonijr.chesslib.PieceType;
-import com.github.bhlangonijr.chesslib.Side;
-import com.github.bhlangonijr.chesslib.Square;
-import com.github.bhlangonijr.chesslib.move.Move;
-
-import fii.ai.natural.language.model.Metadata;
-import fii.ai.natural.language.model.MoveVariant;
-import fii.ai.natural.language.model.MovesTree;
-import fii.ai.natural.language.model.Node;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.abs;
 
@@ -97,8 +87,8 @@ public class MetadataServiceImpl implements MetadataService {
         updateCheckMetadata(board, move, nodeMetadata);
         updateCastlingMetadata(board, move, nodeMetadata);
         updatePromotionMetadata(move, nodeMetadata);
-        updatePreCheckMateMetadata(nodeMetadata,score);
-        if(decorateForMainVariantOnly) {
+        updatePreCheckMateMetadata(nodeMetadata, score);
+        if (decorateForMainVariantOnly) {
             updateEqualScopeMetadata(board, move, nodeMetadata, score);
         }
     }
@@ -244,9 +234,21 @@ public class MetadataServiceImpl implements MetadataService {
         return false;
     }
 
-    private void updatePreCheckMateMetadata(List<Metadata> nodeMetadata, double score){
-        if(score>=ScoreInfo.getCheckMateLimit()){
+    private void updatePreCheckMateMetadata(List<Metadata> nodeMetadata, double score) {
+        if (score >= ScoreInfo.getCheckMateLimit()) {
             nodeMetadata.add(new PreCheckMateMetadata(true));
+        }
+    }
+
+    @Override
+    public void decorateWithMetadataOptimalMoves(MovePosition movePosition) {
+        String initialPosition = movePosition.getInitialStateFEN();
+        Board start = new Board();
+        start.loadFromFen(initialPosition);
+
+        if (movePosition.getVariants() != null) {
+            for (MoveVariant moveVariant : movePosition.getVariants())
+                decorateVariant(start.clone(), moveVariant, true);
         }
     }
 }

@@ -1,9 +1,10 @@
 package fii.ai.natural.language.controller;
 
 import fii.ai.natural.language.input.InputTree;
+import fii.ai.natural.language.mapper.PositionMapper;
 import fii.ai.natural.language.mapper.TreeMapper;
-import fii.ai.natural.language.service.GameService;
 import fii.ai.natural.language.model.MoveComment;
+import fii.ai.natural.language.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import java.util.List;
 public class GameController {
     private TreeMapper treeMapper;
     private GameService gameService;
+    private PositionMapper positionMapper;
 
     @Autowired
     public GameController(TreeMapper treeMapper, GameService gameService) {
@@ -32,5 +34,10 @@ public class GameController {
     @PostMapping("/game")
     public List<MoveComment> game(@RequestBody InputTree inputTree) {
         return gameService.commentMovesTree(treeMapper.map(inputTree));
+    }
+
+    @PostMapping("/optimal-moves")
+    public List<MoveComment> optimalMoves(@RequestBody InputTree inputTree) {
+        return gameService.commentOptimalMoves(positionMapper.map(inputTree));
     }
 }
