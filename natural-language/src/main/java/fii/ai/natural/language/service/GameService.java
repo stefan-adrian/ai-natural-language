@@ -71,10 +71,9 @@ public class GameService {
         return moveCommentList;
     }
 
-    public List<MoveComment> commentOptimalMoves(MovePosition movePosition) {
+    public MovePosition commentOptimalMoves(MovePosition movePosition) {
         metadataService.decorateWithMetadataOptimalMoves(movePosition);
-        commentService.commentMovesTreeOptimalMoves(movePosition);
-        return concatenateCommentsForOptimalMoves(movePosition);
+        return movePosition;
     }
 
     //TODO Check if this actually works right (after the comment generation)

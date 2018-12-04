@@ -37,18 +37,20 @@ public class MetadataServiceImpl implements MetadataService {
         start.loadFromFen(initialPosition);
 
         if (movesTree.getMainVariant() != null) {
+            whiteStartedPlayingForEqual=false;
+            blackStartedPlayingForEqual=false;
             decorateVariant(start.clone(), movesTree.getMainVariant(), true);
         }
     }
 
-    private void decorateVariant(Board board, MoveVariant variant, boolean decorateForMainVariantOnly) {
+    private void decorateVariant(Board board, MoveVariant variant, boolean decorateMainVariant) {
         for (Node node : variant.getMoves()) {
             // get move
             String moveString = node.getMove();
             Move move = moveFromText(moveString);
 
             // decorate node with metadata
-            updateMetadata(board, move, node.getMetadata(), node.getScore(), decorateForMainVariantOnly);
+            updateMetadata(board, move, node.getMetadata(), node.getScore(), decorateMainVariant);
 
             // check for variants
             List<MoveVariant> variants = node.getVariants();
@@ -77,7 +79,7 @@ public class MetadataServiceImpl implements MetadataService {
         return new Move(from, to);
     }
 
-    private void updateMetadata(Board board, Move move, List<Metadata> nodeMetadata, double score, boolean decorateForMainVariantOnly) {
+    private void updateMetadata(Board board, Move move, List<Metadata> nodeMetadata, double score, boolean decorateMainVariant) {
         updatePieceNameMetadata(board, move, nodeMetadata);
         updatePieceColorMetadata(board, move, nodeMetadata);
         updatePieceTakenMetadata(board, move, nodeMetadata);
@@ -88,7 +90,7 @@ public class MetadataServiceImpl implements MetadataService {
         updateCastlingMetadata(board, move, nodeMetadata);
         updatePromotionMetadata(move, nodeMetadata);
         updatePreCheckMateMetadata(nodeMetadata, score);
-        if (decorateForMainVariantOnly) {
+        if (decorateMainVariant) {
             updateEqualScopeMetadata(board, move, nodeMetadata, score);
         }
     }
@@ -247,8 +249,11 @@ public class MetadataServiceImpl implements MetadataService {
         start.loadFromFen(initialPosition);
 
         if (movePosition.getVariants() != null) {
-            for (MoveVariant moveVariant : movePosition.getVariants())
+            for (MoveVariant moveVariant : movePosition.getVariants()) {
+                whiteStartedPlayingForEqual=false;
+                blackStartedPlayingForEqual=false;
                 decorateVariant(start.clone(), moveVariant, true);
+            }
         }
     }
 }

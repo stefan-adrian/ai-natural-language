@@ -10,5 +10,5 @@ public interface MetadataService {
 
     void decorateWithMetadata(MovesTree movesTree);
 
-    public void decorateWithMetadataOptimalMoves(MovePosition movePosition);
+    void decorateWithMetadataOptimalMoves(MovePosition movePosition);
 }
