@@ -19,7 +19,7 @@ public class MovePosition {
     /**
      * List of possible moves from the given position
      */
-    private List<Node> variants = new ArrayList<>();
+    private List<MoveVariant> variants = new ArrayList<>();
 
 
     public String getInitialStateFEN() {
@@ -30,12 +30,11 @@ public class MovePosition {
         this.initialStateFEN = initialStateFEN;
     }
 
-    public List<Node> getVariants() {
+    public List<MoveVariant> getVariants() {
         return variants;
     }
 
-    public void setVariants(List<Node> variants) {
+    public void setVariants(List<MoveVariant> variants) {
         this.variants = variants;
     }
-
 }
