@@ -67,9 +67,7 @@ public class CommentServiceImpl implements CommentService {
     private void commentPiecesTaken(MoveVariant moveVariant){
         /*
         Functia asta va adauga la varinata primita ca parametru un comentariu in care zice ce piese au fost luate de culoarea
-        care face prima mutare si de asemena ce piese au fost luate
-        Pentru asta sa se apelze alte 2 functii, una pentru pisele care le ia si una pentru pisele care le pierde(functiile sa
-        returneze lista de stringuri
+        care face prima mutare si de asemena ce piese au fost pierdute
          */
     }
 
