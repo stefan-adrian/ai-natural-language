@@ -1,5 +1,6 @@
 package fii.ai.natural.language.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoveVariant {
@@ -17,9 +18,9 @@ public class MoveVariant {
     /**
      * Strategies like PieceRemained, AttackPieces
      */
-    private List<String> strategyNames;
+    private List<String> strategyNames=new ArrayList<>();
 
-    private List<String> comments;
+    private List<String> comments=new ArrayList<>();
 
     public List<Node> getMoves() {
         return moves;
