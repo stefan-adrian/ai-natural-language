@@ -2,7 +2,7 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.mapper.MetadataMapper;
 import fii.ai.natural.language.model.MoveMetadata;
-import fii.ai.natural.language.model.MovePosition;
+import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +28,49 @@ public class CommentServiceImpl implements CommentService {
         return movesTree;
     }
 
+    /**
+     * In functi asta vreau sa parcurgi lista de mutari din varianta si sa generezi un comentariu cu ce se intampla in
+     * toata varianta. La ce ma refer prin asta ii ca fata de celelalte unde doar puneai comentariu pentru fiecare miscare
+     * aici va trebui sa pui cumva un comentariu pentru toate mutarile. Doar ca nu ar arata bine doar sa fie comentate mutarile
+     * pe rand si apoi puse la un loc, cometariu ar trebui sa arate ceva de genul Dupa algorithmName si strategyNames la aceasta mutare
+     * culoare (cea care va fi prima culaore) ia piesele, ii sunt lute piesele, a dat sah de n ori, era la o mutare de a da
+     * sah mat, a dat sah mat etc( ceea ce ti se pare si tie relevant si mai putem vorbi detaliile oricum). Ii important ca
+     * comentariile sa fie "orientate" spre culoarea care face prima mutarea.
+     * Aceste comentarii se vor adauga in lista de comentarii care o are inputVariant.
+     * Comentariile trebuie tot in engleza. Functiile ar fi oarecum asemanatoare cu celelalte, daca poti cumva sa le folosesti pe
+     * celelalte ar fi ideal dar nu stiu daca vei reusi dar daca nu vrei putea folosi bucati din codul de la celelalte oricum.
+     * @param moveVariant
+     * @return
+     */
     @Override
-    public MovePosition commentMovesTreeOptimalMoves(MovePosition movePosition) {
-        for (int index = 0; index < movePosition.getVariants().size(); index++) {
-            commentOptimalMove(movePosition, index);
-        }
-        return movePosition;
+    public MoveVariant commentMoveVariant(MoveVariant moveVariant){
+        //Pentru a testa functionalitatea functiei trebuie apelat endpointul optimal-moves din postman pentru a vedea daca functioneaza
+        // (body-ul pentru a testa asta ar trebuie sa fie unul cu structura la prima varianta de json din idei.md, evident ii posibil sa fie nevoie sa fie modifiat
+        // pentru a aduce jocul in cazul dorit)
+        //TODO COSMIN
+        moveVariant.getComments().add("This variant uses  algorithm "+moveVariant.getAlgorithmName()+" and strategies "+moveVariant.getStrategyNames());
+        commentPiecesTaken(moveVariant);
+        //TODO FLORENTINA
+        /*
+        Apleaza o functie care sa genereze un comentariu unde sa zica la ce mutari a fost la un pas de a da sau primi sah mat(folosind metadata PreCheckMate),
+        functia ar trebuie sa genereze un comentariu ceva de genul Albul a fost de n ori la un pas de a da sah mat si la m ori la un pas de a primi sah mat.
+        Va trebui sa tii cont de cine face mutarea ca comentariul se face orientat spre cel care face prima mutare, adica daca albul muta primul atunci va trebui
+        sa zici ca albul a fost de n ori la un pas de a da sah mat si de m ori la un pas de a primi sah mat
+        Trebuie apelata o functi similara cu cea commentPiecesTaken, adica ca parametru va trebui sa primeasca un MoveVariant si sa adauge un comentariu la moveVariant
+        Evident vor trebui parcurse toate mutarile din varianta pentru a determina acest lucru
+        Cometariul trebuie scris in engleza
+        Te poti uita in celelalte functii cum sa folosesti metadatele din comments
+         */
+        return null;
     }
 
-    private void commentOptimalMove(MovePosition movePosition, int index) {
-        List<Node> move = movePosition.getVariants().get(index).getMoves();
-        //TODO Add comments for every move
+    private void commentPiecesTaken(MoveVariant moveVariant){
+        /*
+        Functia asta va adauga la varinata primita ca parametru un comentariu in care zice ce piese au fost luate de culoarea
+        care face prima mutare si de asemena ce piese au fost luate
+        Pentru asta sa se apelze alte 2 functii, una pentru pisele care le ia si una pentru pisele care le pierde(functiile sa
+        returneze lista de stringuri
+         */
     }
 
     /**

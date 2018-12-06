@@ -19,6 +19,8 @@ public class MoveVariant {
      */
     private List<String> strategyNames;
 
+    private List<String> comments;
+
     public List<Node> getMoves() {
         return moves;
     }
@@ -41,5 +43,13 @@ public class MoveVariant {
 
     public void setStrategyNames(List<String> strategyNames) {
         this.strategyNames = strategyNames;
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<String> comments) {
+        this.comments = comments;
     }
 }
