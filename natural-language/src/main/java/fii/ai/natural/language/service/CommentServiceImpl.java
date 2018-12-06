@@ -71,6 +71,10 @@ public class CommentServiceImpl implements CommentService {
          */
     }
 
+    private void commentPreChecked(MoveVariant moveVariant){
+        
+    }
+
     /**
      * This function generates comments for the move for movesTree at the index given
      * The way I thought this method is that will call many more methods that will generate a comment(and add it to comment list)
