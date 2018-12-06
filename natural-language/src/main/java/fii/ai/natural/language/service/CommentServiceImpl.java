@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
         moveVariant.getComments().add("This variant uses  algorithm "+moveVariant.getAlgorithmName()+" and strategies "+moveVariant.getStrategyNames());
         commentPiecesTaken(moveVariant);
         //TODO FLORENTINA
-        
+
         /*
         Apleaza o functie care sa genereze un comentariu unde sa zica la ce mutari a fost la un pas de a da sau primi sah mat(folosind metadata PreCheckMate),
         functia ar trebuie sa genereze un comentariu ceva de genul Albul a fost de n ori la un pas de a da sah mat si la m ori la un pas de a primi sah mat.
@@ -74,6 +74,7 @@ public class CommentServiceImpl implements CommentService {
 
     private void commentPreChecked(MoveVariant moveVariant){
 
+        // vunctia aceasta va adauga comentariile legate de preCheck metadata
     }
 
     /**
