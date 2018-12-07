@@ -1,13 +1,11 @@
 package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.mapper.MetadataMapper;
-import fii.ai.natural.language.model.MoveMetadata;
-import fii.ai.natural.language.model.MoveVariant;
-import fii.ai.natural.language.model.MovesTree;
-import fii.ai.natural.language.model.Node;
+import fii.ai.natural.language.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,7 +60,43 @@ public class CommentServiceImpl implements CommentService {
         Cometariul trebuie scris in engleza
         Te poti uita in celelalte functii cum sa folosesti metadatele din comments
          */
+        commentCheckMateSteps(moveVariant);
         return null;
+    }
+
+    private void commentCheckMateSteps(MoveVariant moveVariant) {
+        int moveIndex = 1;
+        String moveColor = new String();
+        List<String> getComment = new ArrayList<String>();
+        List<String> takeComment = new ArrayList<String>();
+        for (Node node : moveVariant.getMoves()) {
+            if (node.getMetadata().size() != 0) {
+                MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
+                if (moveIndex == 1) {
+                    moveColor = moveMetadata.getColor();
+                }
+                if (moveMetadata.getPreCheckMate() && moveMetadata.getColor().equals(moveColor)) {
+                    String move = "" + moveIndex;
+                    getComment.add(move);
+                } else if (moveMetadata.getPreCheckMate() && !moveMetadata.getColor().equals(moveColor)) {
+                    String move = "" + moveIndex;
+                    takeComment.add(move);
+                }
+            }
+            moveIndex++;
+        }
+        moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
+        if(getComment.size()>0 && takeComment.size()>0) {
+            moveVariant.getComments().add(moveColor + " was one step away from giving CheckMate at pozition(s):" +
+                    getComment + " and one step away from taking CheckMate at pozition(s):" + takeComment + ".");
+        }
+        else if(getComment.size()>0 && takeComment.size()==0) {
+            moveVariant.getComments().add(moveColor + " was one step away from giving CheckMate at pozition(s):" +
+                    getComment + ".");
+        }
+        else if(getComment.size()==0 && takeComment.size()>0) {
+            moveVariant.getComments().add(moveColor + " was one step away from taking CheckMate at pozition(s):" + takeComment + ".");
+        }
     }
 
     private void commentPiecesTaken(MoveVariant moveVariant){
