@@ -1,9 +1,6 @@
 package fii.ai.natural.language.service;
 
-import fii.ai.natural.language.model.MoveComment;
-import fii.ai.natural.language.model.MovePosition;
-import fii.ai.natural.language.model.MoveVariant;
-import fii.ai.natural.language.model.MovesTree;
+import fii.ai.natural.language.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,22 +71,30 @@ public class GameService {
         return moveCommentList;
     }
 
-    public MovePosition commentOptimalMoves(MovePosition movePosition) {
+    public List<OptimalMove> commentOptimalMoves(MovePosition movePosition) {
+        List<OptimalMove> optimalMoves = new ArrayList<>();
         metadataService.decorateWithMetadataOptimalMoves(movePosition);
-        List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants());
+        //List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants());
         /* Pentru cel care face partea de comentarii a variante poate sa cometeze linia de mai sus si sa o lase
-        pe asta pentru a vedea cum comenteaza variantele de la movePosition
+        pe asta pentru a vedea cum comenteaza variantele de la movePosition*/
         List<MoveVariant> bestVariants=movePosition.getVariants();
-         */
+
         for (MoveVariant moveVariant : bestVariants) {
             commentService.commentMoveVariant(moveVariant);
+            System.out.println(moveVariant);
+            for(Node node:moveVariant.getMoves()) {
+                OptimalMove optimalMove = new OptimalMove();
+                optimalMove.setMovement(node.getMove());
+                optimalMove.setComments(moveVariant.getComments());
+                optimalMoves.add(optimalMove);
+            }
         }
         //TODO ANCA
         /*
         Pune cometariile in structura care trebuie trimisa spre front end si de asemena aduga la structura pentru tot
         jocul evaluarea muatrii(o sa-ti trimiti detaliile mai exacte pentru cum trebuie sa arate json-urile
          */
-        return movePosition;
+        return optimalMoves;
     }
 
 }
