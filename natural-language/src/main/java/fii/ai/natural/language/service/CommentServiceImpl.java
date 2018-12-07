@@ -60,15 +60,22 @@ public class CommentServiceImpl implements CommentService {
         Cometariul trebuie scris in engleza
         Te poti uita in celelalte functii cum sa folosesti metadatele din comments
          */
-        commentCheckMateSteps(moveVariant);
+        commentPreCheckMate(moveVariant);
         return null;
     }
 
-    private void commentCheckMateSteps(MoveVariant moveVariant) {
+    private void commentPiecesTaken(MoveVariant moveVariant){
+        /*
+        Functia asta va adauga la varinata primita ca parametru un comentariu in care zice ce piese au fost luate de culoarea
+        care face prima mutare si de asemena ce piese au fost pierdute
+         */
+    }
+
+    private void commentPreCheckMate(MoveVariant moveVariant) {
         int moveIndex = 1;
         String moveColor = new String();
-        List<String> getComment = new ArrayList<String>();
-        List<String> takeComment = new ArrayList<String>();
+        List<String> getComment = new ArrayList<>();
+        List<String> takeComment = new ArrayList<>();
         for (Node node : moveVariant.getMoves()) {
             if (node.getMetadata().size() != 0) {
                 MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
@@ -87,28 +94,16 @@ public class CommentServiceImpl implements CommentService {
         }
         moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
         if(getComment.size()>0 && takeComment.size()>0) {
-            moveVariant.getComments().add(moveColor + " was one step away from giving CheckMate at pozition(s):" +
-                    getComment + " and one step away from taking CheckMate at pozition(s):" + takeComment + ".");
+            moveVariant.getComments().add(moveColor + " was one step away from giving checkmate at position(s):" +
+                    getComment + " and one step away from taking checkmate at position(s):" + takeComment + ".");
         }
         else if(getComment.size()>0 && takeComment.size()==0) {
-            moveVariant.getComments().add(moveColor + " was one step away from giving CheckMate at pozition(s):" +
+            moveVariant.getComments().add(moveColor + " was one step away from giving checkmate at position(s):" +
                     getComment + ".");
         }
         else if(getComment.size()==0 && takeComment.size()>0) {
-            moveVariant.getComments().add(moveColor + " was one step away from taking CheckMate at pozition(s):" + takeComment + ".");
+            moveVariant.getComments().add(moveColor + " was one step away from taking CheckMate at position(s):" + takeComment + ".");
         }
-    }
-
-    private void commentPiecesTaken(MoveVariant moveVariant){
-        /*
-        Functia asta va adauga la varinata primita ca parametru un comentariu in care zice ce piese au fost luate de culoarea
-        care face prima mutare si de asemena ce piese au fost pierdute
-         */
-    }
-
-    private void commentPreChecked(MoveVariant moveVariant){
-
-        // vunctia aceasta va adauga comentariile legate de preCheck metadata
     }
 
     /**
