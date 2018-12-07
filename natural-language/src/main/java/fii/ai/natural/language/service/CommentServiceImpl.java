@@ -49,18 +49,8 @@ public class CommentServiceImpl implements CommentService {
         moveVariant.getComments().add("This variant uses  algorithm "+moveVariant.getAlgorithmName()+" and strategies "+moveVariant.getStrategyNames());
         commentPiecesTaken(moveVariant);
         //TODO FLORENTINA
-
-        /*
-        Apleaza o functie care sa genereze un comentariu unde sa zica la ce mutari a fost la un pas de a da sau primi sah mat(folosind metadata PreCheckMate),
-        functia ar trebuie sa genereze un comentariu ceva de genul Albul a fost de n ori la un pas de a da sah mat si la m ori la un pas de a primi sah mat.
-        Va trebui sa tii cont de cine face mutarea ca comentariul se face orientat spre cel care face prima mutare, adica daca albul muta primul atunci va trebui
-        sa zici ca albul a fost de n ori la un pas de a da sah mat si de m ori la un pas de a primi sah mat
-        Trebuie apelata o functi similara cu cea commentPiecesTaken, adica ca parametru va trebui sa primeasca un MoveVariant si sa adauge un comentariu la moveVariant
-        Evident vor trebui parcurse toate mutarile din varianta pentru a determina acest lucru
-        Cometariul trebuie scris in engleza
-        Te poti uita in celelalte functii cum sa folosesti metadatele din comments
-         */
         commentPreCheckMate(moveVariant);
+        commentPromoteToPiece(moveVariant);
         return null;
     }
 
@@ -104,6 +94,41 @@ public class CommentServiceImpl implements CommentService {
         else if(getComment.size()==0 && takeComment.size()>0) {
             moveVariant.getComments().add(moveColor + " was one step away from taking CheckMate at position(s):" + takeComment + ".");
         }
+    }
+
+    private void commentPromoteToPiece(MoveVariant moveVariant) {
+        int moveIndex = 1;
+        String moveColor = new String();
+        List<String> commentColor = new ArrayList<>();
+        List<String> commentOpponent = new ArrayList<>();
+        for (Node node : moveVariant.getMoves()) {
+            if (node.getMetadata().size() != 0) {
+                MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
+                if (moveIndex == 1) {
+                    moveColor = moveMetadata.getColor();
+                }
+                if (moveMetadata.getPromoteToPiece()!=null && moveMetadata.getColor().equals(moveColor)) {
+                    commentColor.add(moveMetadata.getPromoteToPiece());
+
+                }
+                else if (moveMetadata.getPromoteToPiece() != null && !moveMetadata.getColor().equals(moveColor)) {
+                    commentOpponent.add(moveMetadata.getPromoteToPiece());
+                }
+            }
+            moveIndex++;
+        }
+        moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
+        if(commentColor.size()>0 && commentOpponent.size()>0) {
+            moveVariant.getComments().add(moveColor + " side promoted to " +
+                    commentColor + " and his opponent promoted to" + commentOpponent + ".");
+        }
+        else if(commentColor.size()>0 && commentOpponent.size()==0) {
+            moveVariant.getComments().add(moveColor + " side promoted to" + commentColor + ".");
+        }
+        else if(commentColor.size()==0 && commentOpponent.size()>0) {
+            moveVariant.getComments().add(moveColor + " opponent promoted to" + commentOpponent + ".");
+        }
+
     }
 
     /**
