@@ -51,6 +51,7 @@ public class CommentServiceImpl implements CommentService {
         //TODO FLORENTINA
         commentPreCheckMate(moveVariant);
         commentPromoteToPiece(moveVariant);
+        commentGameState(moveVariant);
         return null;
     }
 
@@ -97,38 +98,58 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void commentPromoteToPiece(MoveVariant moveVariant) {
-        int moveIndex = 1;
         String moveColor = new String();
         List<String> commentColor = new ArrayList<>();
         List<String> commentOpponent = new ArrayList<>();
+        Node move = moveVariant.getMoves().get(0);
+        MoveMetadata moveMeta = metadataMapper.map(move.getMetadata());
+        moveColor = moveMeta.getColor();
         for (Node node : moveVariant.getMoves()) {
             if (node.getMetadata().size() != 0) {
                 MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
-                if (moveIndex == 1) {
-                    moveColor = moveMetadata.getColor();
-                }
-                if (moveMetadata.getPromoteToPiece()!=null && moveMetadata.getColor().equals(moveColor)) {
+                if (moveMetadata.getPromoteToPiece() != null && moveMetadata.getColor().equals(moveColor)) {
                     commentColor.add(moveMetadata.getPromoteToPiece());
-
                 }
                 else if (moveMetadata.getPromoteToPiece() != null && !moveMetadata.getColor().equals(moveColor)) {
                     commentOpponent.add(moveMetadata.getPromoteToPiece());
                 }
             }
-            moveIndex++;
         }
         moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
         if(commentColor.size()>0 && commentOpponent.size()>0) {
-            moveVariant.getComments().add(moveColor + " side promoted to " +
-                    commentColor + " and his opponent promoted to" + commentOpponent + ".");
+            moveVariant.getComments().add(moveColor + " side promoted pawns to " +
+                    commentColor + " and his opponent promoted pawns to " + commentOpponent + ".");
         }
         else if(commentColor.size()>0 && commentOpponent.size()==0) {
-            moveVariant.getComments().add(moveColor + " side promoted to" + commentColor + ".");
+            moveVariant.getComments().add(moveColor + " side promoted pawns to " + commentColor + ".");
         }
         else if(commentColor.size()==0 && commentOpponent.size()>0) {
-            moveVariant.getComments().add(moveColor + " opponent promoted to" + commentOpponent + ".");
+            moveVariant.getComments().add(moveColor + " opponent promoted pawns to " + commentOpponent + ".");
         }
+    }
 
+    private void commentGameState(MoveVariant moveVariant) {
+        int moveIndex = 1;
+        for (Node node : moveVariant.getMoves()) {
+            if (node.getMetadata().size() != 0) {
+                MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
+                if(moveMetadata.getState() != null) {
+                    if (moveMetadata.getState().equals("equal")) {
+                        String move = "" + moveIndex;
+                        moveVariant.getComments().add("Game finished as a draw at move " + move + ".");
+                        break;
+                    }
+                    if (moveMetadata.getState().equals("checkmate")) {
+                        String moveColor = moveMetadata.getColor();
+                        String move = "" + moveIndex;
+                        moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
+                        moveVariant.getComments().add(moveColor + " side won the game by getting checkmate at move " + move + ".");
+                        break;
+                    }
+                }
+            }
+            moveIndex++;
+        }
     }
 
     /**
