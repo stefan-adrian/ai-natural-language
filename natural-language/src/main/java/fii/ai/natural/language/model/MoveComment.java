@@ -4,10 +4,12 @@ import java.util.List;
 
 public class MoveComment {
     Integer moveIndex;
+    String evaluation;
     List<String> comments;
 
-    public MoveComment(Integer moveIndex, List<String> comments) {
+    public MoveComment(Integer moveIndex, List<String> comments, String evaluation) {
         this.moveIndex = moveIndex;
+        this.evaluation = evaluation;
         this.comments = comments;
     }
 
@@ -26,5 +28,13 @@ public class MoveComment {
 
     public void setMoveIndex(Integer moveIndex) {
         this.moveIndex = moveIndex;
+    }
+
+    public String getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(String evaluation) {
+        this.evaluation = evaluation;
     }
 }

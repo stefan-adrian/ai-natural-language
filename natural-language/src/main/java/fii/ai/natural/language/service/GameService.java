@@ -1,6 +1,7 @@
 package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.*;
+import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,9 +67,25 @@ public class GameService {
     private List<MoveComment> concatenateComments(MovesTree movesTree) {
         moveCommentList = new ArrayList<>();
         for (int index = 0; index < movesTree.getMainVariant().getMoves().size(); index++) {
-            moveCommentList.add(new MoveComment(index + 1, movesTree.getMainVariant().getMoves().get(index).getComments()));
+            moveCommentList.add(new MoveComment(index + 1, movesTree.getMainVariant().getMoves().get(index).getComments(), getEvaluationForAMove(movesTree.getMainVariant().getMoves().get(index).getScore())));
         }
         return moveCommentList;
+    }
+
+    private String getEvaluationForAMove(double score) {
+        if (score < -1 * ScoreInfo.getMediumImpactMove())
+            return "??";
+        if (score >= -1 * ScoreInfo.getMediumImpactMove() && score < -1 * ScoreInfo.getSmallImpactMove())
+            return "?";
+        if (score >= -1 * ScoreInfo.getSmallImpactMove() && score < 0)
+            return "?!";
+        if (score >= 0 && score <= ScoreInfo.getSmallImpactMove())
+            return "!?";
+        if (score > ScoreInfo.getSmallImpactMove() && score <= ScoreInfo.getMediumImpactMove())
+            return "!";
+        if (score >= ScoreInfo.getMediumImpactMove())
+            return "!!";
+        return null;
     }
 
     public List<OptimalMove> commentOptimalMoves(MovePosition movePosition) {
@@ -77,23 +94,18 @@ public class GameService {
         //List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants());
         /* Pentru cel care face partea de comentarii a variante poate sa cometeze linia de mai sus si sa o lase
         pe asta pentru a vedea cum comenteaza variantele de la movePosition*/
-        List<MoveVariant> bestVariants=movePosition.getVariants();
+        List<MoveVariant> bestVariants = movePosition.getVariants();
 
         for (MoveVariant moveVariant : bestVariants) {
             commentService.commentMoveVariant(moveVariant);
             System.out.println(moveVariant);
-            for(Node node:moveVariant.getMoves()) {
+            for (Node node : moveVariant.getMoves()) {
                 OptimalMove optimalMove = new OptimalMove();
                 optimalMove.setMovement(node.getMove());
                 optimalMove.setComments(moveVariant.getComments());
                 optimalMoves.add(optimalMove);
             }
         }
-        //TODO ANCA
-        /*
-        Pune cometariile in structura care trebuie trimisa spre front end si de asemena aduga la structura pentru tot
-        jocul evaluarea muatrii(o sa-ti trimiti detaliile mai exacte pentru cum trebuie sa arate json-urile
-         */
         return optimalMoves;
     }
 
