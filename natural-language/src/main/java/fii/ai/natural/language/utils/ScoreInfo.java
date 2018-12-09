@@ -31,6 +31,8 @@ public class ScoreInfo {
      */
     private static final Double checkMateLimit = 0.9;
 
+    private static final Double equality = 0.05;
+
     public static Double getEqualLimit() {
         return equalLimit;
     }
@@ -43,7 +45,7 @@ public class ScoreInfo {
         return mediumImpactMove;
     }
 
-    public static Double getCheckMateLimit() {
-        return checkMateLimit;
-    }
+    public static Double getCheckMateLimit() { return checkMateLimit; }
+
+    public static Double getEquality() { return  equality; }
 }

@@ -1,16 +1,21 @@
 package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveVariant;
+import fii.ai.natural.language.model.Node;
+import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Math.abs;
 
 @Service
 public class ScoreServiceImpl implements ScoreService {
 
     /**
      * In functia asta vreau sa parcurgi variantele care le primesti ca parametru si sa decizi pe baza scorului
-     * care sunt cele mai bune varainte, poate fi doar una dar pot fi si mai multe care dau scorul maximal.
+     * care sunt cele mai bune variante, poate fi doar una dar pot fi si mai multe care dau scorul maximal.
      *
      * Cum m-am gandit sa calculezi scorul ii ca ar trebui sa parcurgi variantele si sa faci o medie a scorurilor pentru
      * fiecare culoare, prin ce ma refer ar trebui categoriat ceva de genul primaCuloare si aDoua culaore ca pe tine te-ar
@@ -29,7 +34,49 @@ public class ScoreServiceImpl implements ScoreService {
      * @return the variants with maximal score
      */
     public List<MoveVariant> getMoveVariantsByScore(List<MoveVariant> variants){
+        double variantScore;
+        double scoreMax = -5;
+        boolean checkMate = false;
+        List<MoveVariant> bestVariants = new ArrayList<>();
+
+        for (MoveVariant variant : variants) {
+            variantScore = 0;
+            List<Node> moves = variant.getMoves();
+
+
+            for (int i=0; i<moves.size(); i+=2) {
+                variantScore += moves.get(i).getScore();
+            }
+            for (int i=1; i<moves.size(); i+=2) {
+                variantScore -= moves.get(i).getScore();
+            }
+            Node ultima;
+            if( moves.size() % 2 == 0 ) {
+                ultima = moves.get(moves.size()-2);
+            }
+            else {
+                ultima = moves.get(moves.size()-1);
+            }
+
+            if ( ultima.getScore() >= ScoreInfo.getCheckMateLimit() ) {
+                if (checkMate == false) bestVariants.clear();
+                bestVariants.add(variant);
+                checkMate = true;
+            }
+                else if( !checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
+                    bestVariants.add(variant);
+                    if(variantScore > scoreMax){
+                        scoreMax = variantScore;
+                    }
+                }
+                    else if ( !checkMate && abs(variantScore - scoreMax) > ScoreInfo.getEquality()){
+                        scoreMax = variantScore;
+                        bestVariants.clear();
+                        bestVariants.add(variant);
+                    }
+        }
+
         //TODO IOAN
-        return null;
+        return bestVariants;
     }
 }
