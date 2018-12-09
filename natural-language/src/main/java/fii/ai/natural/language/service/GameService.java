@@ -97,7 +97,7 @@ public class GameService {
         List<MoveVariant> bestVariants = movePosition.getVariants();
 
         for (MoveVariant moveVariant : bestVariants) {
-            commentService.commentMoveVariant(moveVariant);
+            commentService.commentMoveVariant(moveVariant,movePosition);
             System.out.println(moveVariant);
             for (Node node : moveVariant.getMoves()) {
                 OptimalMove optimalMove = new OptimalMove();
