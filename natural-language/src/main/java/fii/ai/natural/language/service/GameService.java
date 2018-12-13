@@ -69,7 +69,9 @@ public class GameService {
     private List<MoveComment> concatenateComments(MovesTree movesTree) {
         moveCommentList = new ArrayList<>();
         for (int index = 0; index < movesTree.getMainVariant().getMoves().size(); index++) {
-            moveCommentList.add(new MoveComment(index + 1, movesTree.getMainVariant().getMoves().get(index).getComments(), getEvaluationForAMove(movesTree.getMainVariant().getMoves().get(index).getScore())));
+            if(movesTree.getMainVariant().getMoves().get(index).getComments().size()!=0) {
+                moveCommentList.add(new MoveComment(index + 1, movesTree.getMainVariant().getMoves().get(index).getComments(), getEvaluationForAMove(movesTree.getMainVariant().getMoves().get(index).getScore())));
+            }
         }
         return moveCommentList;
     }

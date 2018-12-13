@@ -31,7 +31,6 @@ public class CommentMoveServiceImpl implements CommentMoveService {
     private void commentMove(MovesTree movesTree, int indexOfMove) {
         Node move = movesTree.getMainVariant().getMoves().get(indexOfMove);
         MoveMetadata moveMetadata = metadataMapper.map(move.getMetadata());
-        decorateWithImpactOnGameComment(moveMetadata, move);
         decorateWithCommentIfPieceWasTaken(moveMetadata, move);
         decorateWithCastlingPossibilityComment(movesTree, indexOfMove, moveMetadata, move);
         decorateWithIfCheckComment(moveMetadata, move);
@@ -39,6 +38,9 @@ public class CommentMoveServiceImpl implements CommentMoveService {
         decorateWithGameStateComment(moveMetadata, move);
         decorateWithPromotionComment(moveMetadata, move);
         decorateWithEqualScopeComment(movesTree, indexOfMove, moveMetadata, move);
+        if(movesTree.getMainVariant().getMoves().get(indexOfMove).getComments().size()!=0){
+            decorateWithImpactOnGameComment(moveMetadata, move);
+        }
     }
 
     private void decorateWithBasicMoveDescriptionComment(MoveMetadata moveMetdata, Node move) {
