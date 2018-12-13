@@ -27,4 +27,12 @@ public class MovesTree {
     public void setMainVariant(MoveVariant mainVariant) {
         this.mainVariant = mainVariant;
     }
+
+    @Override
+    public String toString() {
+        return "MovesTree{" +
+                "initialStateFEN='" + initialStateFEN + '\'' +
+                ", mainVariant=" + mainVariant +
+                '}';
+    }
 }

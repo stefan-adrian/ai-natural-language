@@ -84,4 +84,15 @@ public class MoveVariant {
     public int hashCode() {
         return Objects.hash(moves, algorithmName, strategyNames, comments, score);
     }
+
+    @Override
+    public String toString() {
+        return "MoveVariant{" +
+                "moves=" + moves +
+                ", algorithmName='" + algorithmName + '\'' +
+                ", strategyNames=" + strategyNames +
+                ", comments=" + comments +
+                ", score=" + score +
+                '}';
+    }
 }

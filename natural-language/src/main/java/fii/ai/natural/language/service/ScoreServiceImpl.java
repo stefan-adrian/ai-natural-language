@@ -66,7 +66,7 @@ public class ScoreServiceImpl implements ScoreService {
                 bestVariants.add(variant);
                 checkMate = true;
                 variant.setScore(1.0);
-            } else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
+            } /*else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
                 bestVariants.add(variant);
                 if (variantScore > scoreMax) {
                     scoreMax = variantScore;
@@ -74,7 +74,7 @@ public class ScoreServiceImpl implements ScoreService {
                 //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
                 //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
                 variant.setScore(variantScore);
-            } else if (!checkMate && abs(variantScore - scoreMax) > ScoreInfo.getEquality()) {
+            }*/ else if (!checkMate && variantScore>scoreMax) {
                 scoreMax = variantScore;
                 bestVariants.clear();
                 bestVariants.add(variant);
@@ -112,7 +112,7 @@ public class ScoreServiceImpl implements ScoreService {
                     bestVariants.add(mainVariant);
                     checkMate = true;
                     mainVariant.setScore(1.0);
-                } else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
+                } /*else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
                     bestVariants.add(mainVariant);
                     if (variantScore > scoreMax) {
                         scoreMax = variantScore;
@@ -120,12 +120,15 @@ public class ScoreServiceImpl implements ScoreService {
                     //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
                     //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
                     mainVariant.setScore(variantScore);
-                } else if (!checkMate && abs(variantScore - scoreMax) > ScoreInfo.getEquality()) {
+                    //Model de calcul al scorului cu abs nu merge corect, pentru cazul in care scorul maxim era mare si scorul variantei era negativ dadea scorul
+                    //mai mare decat scorul maxim actual ceea ce nu ii ok asa ca momentan am sters aia si am comentat ce mai aveai pentru a putea testa
+                }*/ else if (!checkMate && variantScore>scoreMax) {
                     scoreMax = variantScore;
                     bestVariants.clear();
                     bestVariants.add(mainVariant);
                     mainVariant.setScore(variantScore);
                 }
+                mainVariant.setScore(variantScore);
         }
 
         return bestVariants;

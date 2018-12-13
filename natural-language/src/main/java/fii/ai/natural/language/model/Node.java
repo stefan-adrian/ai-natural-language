@@ -101,4 +101,14 @@ public class Node {
     public int hashCode() {
         return Objects.hash(move, score, variants, metadata, comments);
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "move='" + move + '\'' +
+                ", score=" + score +
+                ", metadata=" + metadata +
+                ", comments=" + comments +
+                '}';
+    }
 }
