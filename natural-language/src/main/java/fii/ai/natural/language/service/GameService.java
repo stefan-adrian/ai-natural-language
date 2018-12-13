@@ -16,15 +16,17 @@ import java.util.List;
 public class GameService {
 
     private MetadataService metadataService;
-    private CommentService commentService;
+    private CommentMoveService commentMoveService;
     private List<MoveComment> moveCommentList;
     private ScoreService scoreService;
+    private CommentVariantService commentVariantService;
 
     @Autowired
-    public GameService(MetadataService metadataService, CommentService commentService, ScoreService scoreService) {
+    public GameService(MetadataService metadataService, CommentMoveService commentMoveService, ScoreService scoreService, CommentVariantService commentVariantService) {
         this.metadataService = metadataService;
-        this.commentService = commentService;
+        this.commentMoveService = commentMoveService;
         this.scoreService = scoreService;
+        this.commentVariantService = commentVariantService;
     }
 
     /**
@@ -60,7 +62,7 @@ public class GameService {
 
 
         metadataService.decorateWithMetadata(movesTree);
-        commentService.commentMovesTree(movesTree);
+        commentMoveService.commentMovesTree(movesTree);
         return concatenateComments(movesTree);
     }
 
@@ -97,8 +99,7 @@ public class GameService {
         List<MoveVariant> bestVariants = movePosition.getVariants();
 
         for (MoveVariant moveVariant : bestVariants) {
-            commentService.commentMoveVariant(moveVariant,movePosition);
-            System.out.println(moveVariant);
+            commentVariantService.commentMoveVariant(moveVariant, movePosition);
             for (Node node : moveVariant.getMoves()) {
                 OptimalMove optimalMove = new OptimalMove();
                 optimalMove.setMovement(node.getMove());

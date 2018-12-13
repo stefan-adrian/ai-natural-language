@@ -24,7 +24,7 @@ public class MoveMetadata {
 
     private Boolean equalScope = false;
 
-    private Boolean preCheckMate=false;
+    private Boolean preCheckMate = false;
 
     public String getCastlingState() {
         return castlingState;

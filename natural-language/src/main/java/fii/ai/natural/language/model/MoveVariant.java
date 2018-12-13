@@ -18,9 +18,9 @@ public class MoveVariant {
     /**
      * Strategies like PieceRemained, AttackPieces
      */
-    private List<String> strategyNames=new ArrayList<>();
+    private List<String> strategyNames = new ArrayList<>();
 
-    private List<String> comments=new ArrayList<>();
+    private List<String> comments = new ArrayList<>();
 
     public List<Node> getMoves() {
         return moves;

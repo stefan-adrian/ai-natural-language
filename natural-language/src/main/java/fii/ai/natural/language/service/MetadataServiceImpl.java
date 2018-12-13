@@ -37,8 +37,8 @@ public class MetadataServiceImpl implements MetadataService {
         start.loadFromFen(initialPosition);
 
         if (movesTree.getMainVariant() != null) {
-            whiteStartedPlayingForEqual=false;
-            blackStartedPlayingForEqual=false;
+            whiteStartedPlayingForEqual = false;
+            blackStartedPlayingForEqual = false;
             decorateVariant(start.clone(), movesTree.getMainVariant(), true);
         }
     }
@@ -250,8 +250,8 @@ public class MetadataServiceImpl implements MetadataService {
 
         if (movePosition.getVariants() != null) {
             for (MoveVariant moveVariant : movePosition.getVariants()) {
-                whiteStartedPlayingForEqual=false;
-                blackStartedPlayingForEqual=false;
+                whiteStartedPlayingForEqual = false;
+                blackStartedPlayingForEqual = false;
                 decorateVariant(start.clone(), moveVariant, true);
             }
         }

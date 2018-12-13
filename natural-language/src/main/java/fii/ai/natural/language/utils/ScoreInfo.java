@@ -26,10 +26,9 @@ public class ScoreInfo {
     private static final Double mediumImpactMove = 0.4;
 
     /**
-     * The limit after witch we know that a move will cause a check mate
-     * For example since white wins at 1 after the score is past checkMateLimit then we know that after this move will be a check mate move
+     * If you have a move with the score lower than checkMateLimit the other side can check mate you at the next move
      */
-    private static final Double checkMateLimit = 0.9;
+    private static final Double checkMateLimit = -0.8;
 
     private static final Double equality = 0.05;
 
@@ -45,7 +44,11 @@ public class ScoreInfo {
         return mediumImpactMove;
     }
 
-    public static Double getCheckMateLimit() { return checkMateLimit; }
+    public static Double getCheckMateLimit() {
+        return checkMateLimit;
+    }
 
-    public static Double getEquality() { return  equality; }
+    public static Double getEquality() {
+        return equality;
+    }
 }
