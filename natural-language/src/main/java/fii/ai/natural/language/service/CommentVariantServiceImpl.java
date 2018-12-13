@@ -33,6 +33,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
     }
 
     private void commentPiecesTaken(MoveVariant moveVariant) {
+        //TODO COSMIN Fix function, this function always add comment with move color, even when is not necessary because no piece was taken
         List<String> playerPiecesTaken = new ArrayList<>();
         List<String> oponentPiecesTaken = new ArrayList<>();
         String playerColor = new String();
@@ -208,6 +209,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
     }
 
     private void commentPromoteToPiece(MoveVariant moveVariant) {
+        //TODO COSMIN Same as the one for pieces taken
         String moveColor = new String();
         List<String> commentColor = new ArrayList<>();
         List<String> commentOpponent = new ArrayList<>();
@@ -236,6 +238,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
     }
 
     private void commentGameState(MoveVariant moveVariant) {
+        //TODO COSMIN This one always adds a empty comment
         int moveIndex = 1;
         for (Node node : moveVariant.getMoves()) {
             if (node.getMetadata().size() != 0) {

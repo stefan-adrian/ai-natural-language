@@ -98,16 +98,15 @@ public class GameService {
         //List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants());
         /* Pentru cel care face partea de comentarii a variante poate sa cometeze linia de mai sus si sa o lase
         pe asta pentru a vedea cum comenteaza variantele de la movePosition*/
-        List<MoveVariant> bestVariants = movePosition.getVariants();
+        //List<MoveVariant> bestVariants = movePosition.getVariants();
+        List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants());
 
         for (MoveVariant moveVariant : bestVariants) {
             commentVariantService.commentMoveVariant(moveVariant, movePosition);
-            for (Node node : moveVariant.getMoves()) {
-                OptimalMove optimalMove = new OptimalMove();
-                optimalMove.setMovement(node.getMove());
-                optimalMove.setComments(moveVariant.getComments());
-                optimalMoves.add(optimalMove);
-            }
+            OptimalMove optimalMove = new OptimalMove();
+            optimalMove.setMovement(moveVariant.getMoves().get(0).getMove());
+            optimalMove.setComments(moveVariant.getComments());
+            optimalMoves.add(optimalMove);
         }
         return optimalMoves;
     }

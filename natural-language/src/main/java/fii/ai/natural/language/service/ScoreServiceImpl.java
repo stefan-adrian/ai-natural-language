@@ -58,7 +58,9 @@ public class ScoreServiceImpl implements ScoreService {
                 ultima = moves.get(moves.size() - 1);
             }
 
-            if (ultima.getScore() >= ScoreInfo.getCheckMateLimit()) {
+            //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
+            //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
+            if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
                 if (checkMate == false) bestVariants.clear();
                 bestVariants.add(variant);
                 checkMate = true;
