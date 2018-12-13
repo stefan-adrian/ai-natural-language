@@ -2,8 +2,10 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.mapper.MetadataMapper;
 import fii.ai.natural.language.model.MoveMetadata;
+import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
+import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +15,14 @@ import java.util.List;
 public class CommentMoveServiceImpl implements CommentMoveService {
 
     private MetadataMapper metadataMapper;
+    private ScoreService scoreService;
+    private CommentVariantService commentVariantService;
 
     @Autowired
-    public CommentMoveServiceImpl(MetadataMapper metadataMapper) {
+    public CommentMoveServiceImpl(MetadataMapper metadataMapper, ScoreService scoreService, CommentVariantService commentVariantService) {
         this.metadataMapper = metadataMapper;
+        this.scoreService = scoreService;
+        this.commentVariantService = commentVariantService;
     }
 
     @Override
@@ -38,7 +44,9 @@ public class CommentMoveServiceImpl implements CommentMoveService {
         decorateWithGameStateComment(moveMetadata, move);
         decorateWithPromotionComment(moveMetadata, move);
         decorateWithEqualScopeComment(movesTree, indexOfMove, moveMetadata, move);
-        if(movesTree.getMainVariant().getMoves().get(indexOfMove).getComments().size()!=0){
+        decorateWithMistakeComment(movesTree, indexOfMove);
+
+        if (movesTree.getMainVariant().getMoves().get(indexOfMove).getComments().size() != 0) {
             decorateWithImpactOnGameComment(moveMetadata, move);
         }
     }
@@ -171,5 +179,25 @@ public class CommentMoveServiceImpl implements CommentMoveService {
             }
         }
 
+    }
+
+    private void decorateWithMistakeComment(MovesTree movesTree, int indexOfMove) {
+        MoveVariant bestMoveVariant = scoreService.getBestVariantInCaseMistakeHappened(movesTree, indexOfMove);
+        String comment = null;
+        if (bestMoveVariant != null) {
+            MoveVariant mainVariant = movesTree.getMainVariant();
+            if (bestMoveVariant.getScore() - mainVariant.getScore() > ScoreInfo.getMediumImpactMove()) {
+                comment = "At this move was made a big mistake. With the best moves from a variant this could have happened. ";
+            } else if (bestMoveVariant.getScore() - mainVariant.getScore() > ScoreInfo.getSmallImpactMove()) {
+                comment = "At this move was made a mistake. With the best moves from a variant this could have happened. ";
+            }
+            if (comment != null) {
+                commentVariantService.commentMoveVariant(bestMoveVariant);
+                for (String newComment : bestMoveVariant.getComments()) {
+                    comment += newComment;
+                }
+                mainVariant.getMoves().get(indexOfMove).getComments().add(comment);
+            }
+        }
     }
 }

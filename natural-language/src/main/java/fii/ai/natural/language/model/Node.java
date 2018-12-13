@@ -2,6 +2,7 @@ package fii.ai.natural.language.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Node {
 
@@ -82,5 +83,22 @@ public class Node {
 
     public void setComments(List<String> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return Double.compare(node.score, score) == 0 &&
+                Objects.equals(move, node.move) &&
+                Objects.equals(variants, node.variants) &&
+                Objects.equals(metadata, node.metadata) &&
+                Objects.equals(comments, node.comments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(move, score, variants, metadata, comments);
     }
 }

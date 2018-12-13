@@ -5,5 +5,5 @@ import fii.ai.natural.language.model.MoveVariant;
 
 public interface CommentVariantService {
 
-    void commentMoveVariant(MoveVariant moveVariant, MovePosition movePosition);
+    void commentMoveVariant(MoveVariant moveVariant);
 }

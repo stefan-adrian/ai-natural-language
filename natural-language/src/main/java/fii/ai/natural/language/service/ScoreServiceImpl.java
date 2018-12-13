@@ -1,6 +1,7 @@
 package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.model.MoveVariant;
+import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
 import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class ScoreServiceImpl implements ScoreService {
      * @param variants a list of move variants
      * @return the variants with maximal score
      */
-    public List<MoveVariant> getMoveVariantsByScore(List<MoveVariant> variants) {
+    public List<MoveVariant> getMoveVariantsByScore(List<MoveVariant> variants,MoveVariant mainVariant,int depthForMainVariant,int indexOfMove) {
         double variantScore;
         double scoreMax = -5;
         boolean checkMate = false;
@@ -64,18 +65,99 @@ public class ScoreServiceImpl implements ScoreService {
                 if (checkMate == false) bestVariants.clear();
                 bestVariants.add(variant);
                 checkMate = true;
+                variant.setScore(1.0);
             } else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
                 bestVariants.add(variant);
                 if (variantScore > scoreMax) {
                     scoreMax = variantScore;
                 }
+                //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
+                //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
+                variant.setScore(variantScore);
             } else if (!checkMate && abs(variantScore - scoreMax) > ScoreInfo.getEquality()) {
                 scoreMax = variantScore;
                 bestVariants.clear();
                 bestVariants.add(variant);
+                variant.setScore(variantScore);
             }
         }
 
+        if(mainVariant!=null){
+                variantScore = 0;
+                List<Node> moves = mainVariant.getMoves();
+
+                int depthToLook=0;
+                if(indexOfMove+depthForMainVariant<=moves.size()){
+                    depthToLook=indexOfMove+depthForMainVariant;
+                }else{
+                    depthToLook= moves.size();
+                }
+                for (int i = indexOfMove; i < depthToLook; i += 2) {
+                    variantScore += moves.get(i).getScore();
+                }
+                for (int i = indexOfMove+1; i < depthToLook; i += 2) {
+                    variantScore -= moves.get(i).getScore();
+                }
+                Node ultima;
+                if (moves.size() % 2 == 0) {
+                    ultima = moves.get(moves.size() - 2);
+                } else {
+                    ultima = moves.get(moves.size() - 1);
+                }
+
+                //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
+                //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
+                if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
+                    if (checkMate == false) bestVariants.clear();
+                    bestVariants.add(mainVariant);
+                    checkMate = true;
+                    mainVariant.setScore(1.0);
+                } else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
+                    bestVariants.add(mainVariant);
+                    if (variantScore > scoreMax) {
+                        scoreMax = variantScore;
+                    }
+                    //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
+                    //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
+                    mainVariant.setScore(variantScore);
+                } else if (!checkMate && abs(variantScore - scoreMax) > ScoreInfo.getEquality()) {
+                    scoreMax = variantScore;
+                    bestVariants.clear();
+                    bestVariants.add(mainVariant);
+                    mainVariant.setScore(variantScore);
+                }
+        }
+
         return bestVariants;
+    }
+
+    public MoveVariant getBestVariantInCaseMistakeHappened(MovesTree movesTree,int indexOfMove){
+        int depthForMainVariant=getDepthToLookInMainVariant(movesTree,indexOfMove);
+        if(depthForMainVariant==0){
+            return null;
+        }
+        List<MoveVariant> bestMoves=getMoveVariantsByScore(movesTree.getMainVariant().getMoves().get(indexOfMove).getVariants(),
+                movesTree.getMainVariant(),depthForMainVariant,indexOfMove);
+        for(MoveVariant moveVariant:bestMoves){
+            if(moveVariant==movesTree.getMainVariant()){
+                return null;
+            }
+        }
+        if(bestMoves.size()!=0){
+            return bestMoves.get(0);
+        }
+        return null;
+    }
+
+    private int getDepthToLookInMainVariant(MovesTree movesTree,int indexOfMove){
+        Node move=movesTree.getMainVariant().getMoves().get(indexOfMove);
+        if(move.getVariants()==null){
+            return 0;
+        }
+        int totalNumberOfMoves=0;
+        for(MoveVariant moveVariant:move.getVariants()){
+            totalNumberOfMoves+=moveVariant.getMoves().size();
+        }
+        return totalNumberOfMoves/(move.getVariants().size());
     }
 }

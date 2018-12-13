@@ -22,14 +22,14 @@ public class CommentVariantServiceImpl implements CommentVariantService {
     }
 
     @Override
-    public void commentMoveVariant(MoveVariant moveVariant, MovePosition movePosition) {
-        moveVariant.getComments().add("This variant uses  algorithm " + moveVariant.getAlgorithmName() + " and strategies " + moveVariant.getStrategyNames());
+    public void commentMoveVariant(MoveVariant moveVariant) {
+        moveVariant.getComments().add("Algorithm used for this moves is " + moveVariant.getAlgorithmName() + " with strategies " + moveVariant.getStrategyNames());
         commentPiecesTaken(moveVariant);
         commentPreCheckMate(moveVariant);
         commentPromoteToPiece(moveVariant);
         commentGameState(moveVariant);
         commentChecks(moveVariant);
-        commentCastlingState(moveVariant, movePosition);
+        commentCastlingState(moveVariant);
     }
 
     private void commentPiecesTaken(MoveVariant moveVariant) {
@@ -127,7 +127,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
         moveVariant.getComments().add(comment);
     }
 
-    private void commentCastlingState(MoveVariant moveVariant, MovePosition movePosition) {
+    private void commentCastlingState(MoveVariant moveVariant) {
         Node firstMove = moveVariant.getMoves().get(0);
         MoveMetadata firstMoveMetadata = metadataMapper.map(firstMove.getMetadata());
         String playerColor = firstMoveMetadata.getColor();
