@@ -237,7 +237,7 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     private void updatePreCheckMateMetadata(List<Metadata> nodeMetadata, double score) {
-        if (score >= ScoreInfo.getCheckMateLimit()) {
+        if (score <= ScoreInfo.getCheckMateLimit()) {
             nodeMetadata.add(new PreCheckMateMetadata(true));
         }
     }

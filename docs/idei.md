@@ -349,17 +349,6 @@ metadate. De exemplu din:
 * Ultima etapa consta din transformarea structurii arborescente cu comentarii intr-un sir de caractere
 (text) formatat ca in exemplu de output pe care l-am prezentat. Aceasta etapa este mai mult tehnica.
 
-## Taskuri separate
-
-Din cele pe care le-am prezentat rezulta cateva activitati la care ma gandesc, si la care cred ca
-daca definim bine ce intra in task si ce iese, putem sa le executam separat de catre fiecare.
-
- - mapare spre modelele folosite pentru a lucra(include partea de web)
- - identificare subprobleme(mutarea curenta cu ceea ce sa intamplat pana la ea)
- - generare metadate pentru subproblema
- - generare comentariu propriu zis din metadate
- - generarea raspunsului concret in format text(punerea subproblemelor la un loc,identare etc)
- 
  ## Definirea metdatelor
  Am gandit momentan niste metadate pentru problema noastra pentru a decora fiecare mutare:
  - <b>pieceTaken</b> o sa fie un camp String in modelul care o sa fie null daca nici o piesa nu a fost luata la aceasta mutare si o sa aiba numele complet al piese care a fost luata in caz contrar
@@ -372,7 +361,7 @@ daca definim bine ce intra in task si ce iese, putem sa le executam separat de c
  - <b>check</b> o sa fie o lista de sringuri in care se vor gasi piesele care dau sah la rege
  - <b>promotion</b> o sa fie un camp String care o sa aiba numele piesei in care promoveaza pionul si null in caz ca nu a avut loc nici o promovare
  - <b>equalScope</b> o sa fie un camp te tip boolean care o sa fie true daca culoarea actuala joaca in scopul de a face egal(in caz ca a ajuns intr-un dezavantaj prea mare pentru a mai putea castiga) si false in caz contrar. Decorarea se face doar pentru varianta principala, nu si pentru celelalte variante.
- - <b>preCheckeMate</b> o sa fie un camp de tip boolean care indica daca se poate da sahMat exact dupa mutarea asta
+ - <b>preCheckeMate</b> o sa fie un camp de tip boolean care indica daca se poate da sahMat exact dupa mutarea asta(de oponent)
  
  ## Informatii scor
  Am creat o clasa <b>ScoreInfo</b> cu campuri statice si get-uri in care sunt definite limitele pentru ceea ce inseamna miscare buna/proasta, limita pentru jucat la egal si limita pentru care o sa stim ca jocul ii la distanta de o mutare de sah mat.
