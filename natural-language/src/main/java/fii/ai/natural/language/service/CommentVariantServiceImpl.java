@@ -188,23 +188,26 @@ public class CommentVariantServiceImpl implements CommentVariantService {
                 }
                 if (moveMetadata.getPreCheckMate() && moveMetadata.getColor().equals(moveColor)) {
                     String move = "" + moveIndex;
-                    getComment.add(move);
+                    takeComment.add(move);
                 } else if (moveMetadata.getPreCheckMate() && !moveMetadata.getColor().equals(moveColor)) {
                     String move = "" + moveIndex;
-                    takeComment.add(move);
+                    getComment.add(move);
                 }
             }
             moveIndex++;
         }
-        moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
+
+        if(!moveColor.isEmpty()) {
+            moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
+        }
         if (getComment.size() > 0 && takeComment.size() > 0) {
-            moveVariant.getComments().add(moveColor + " was one step away from giving checkmate at position(s):" +
-                    getComment + " and one step away from taking checkmate at position(s):" + takeComment + ".");
+            moveVariant.getComments().add("Because of the opponent move, " + moveColor + " was one step away from giving checkmate at position(s):" +
+                    getComment + " and one step away from taking checkmate at position(s):" + takeComment + " because of his mistake.");
         } else if (getComment.size() > 0 && takeComment.size() == 0) {
-            moveVariant.getComments().add(moveColor + " was one step away from giving checkmate at position(s):" +
+            moveVariant.getComments().add("Because of the opponent move, " + moveColor + " was one step away from giving checkmate at position(s):" +
                     getComment + ".");
         } else if (getComment.size() == 0 && takeComment.size() > 0) {
-            moveVariant.getComments().add(moveColor + " was one step away from taking CheckMate at position(s):" + takeComment + ".");
+            moveVariant.getComments().add("Because " + moveColor + " make a mistake, the opponent was one step away from giving CheckMate at position(s):" + takeComment + ".");
         }
     }
 
