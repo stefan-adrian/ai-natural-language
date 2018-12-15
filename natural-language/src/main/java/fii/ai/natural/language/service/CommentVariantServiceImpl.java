@@ -160,7 +160,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
             }
             moveIndex++;
         }
-        String comment = new String();
+        String comment = null;
         if (kingSideIndex > 0 && noSideIndex > 0) {
             comment = new String(playerColor);
             comment += " can only do the king side castle since move " + (Integer) kingSideIndex + " can't do any castle since " + (Integer) noSideIndex + ".";
