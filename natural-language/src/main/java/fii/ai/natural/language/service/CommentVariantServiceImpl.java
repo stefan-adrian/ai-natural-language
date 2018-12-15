@@ -83,7 +83,9 @@ public class CommentVariantServiceImpl implements CommentVariantService {
             comment = comment.substring(0, comment.length() - 2);
             comment += ".";
         }
-        moveVariant.getComments().add(comment);
+        if(playerPiecesTaken.size()>0||oponentPiecesTaken.size()>0) {
+            moveVariant.getComments().add(comment);
+        }
     }
 
     private void commentChecks(MoveVariant moveVariant) {
@@ -124,7 +126,9 @@ public class CommentVariantServiceImpl implements CommentVariantService {
         if (playerChecks.size() == 0 && oponentChecks.size() > 0) {
             comment += " checked " + oponentColor + " " + (Integer) oponentChecks.size() + " times.";
         }
-        moveVariant.getComments().add(comment);
+        if(playerChecks.size()>0||oponentChecks.size()>0) {
+            moveVariant.getComments().add(comment);
+        }
     }
 
     private void commentCastlingState(MoveVariant moveVariant) {
