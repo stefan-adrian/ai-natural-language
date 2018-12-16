@@ -23,14 +23,14 @@ public class ScoreInfo {
      * If a move has a impact on the score bigger than mediumImpactMove and smaller than decisiveImpactMove then it means
      * that the move had a medium impact on the game
      */
-    private static final Double mediumImpactMove = 0.4;
+    private static final Double mediumImpactMove = 0.5;
 
     /**
      * If you have a move with the score lower than checkMateLimit the other side can check mate you at the next move
      */
-    private static final Double checkMateLimit = -0.8;
+    private static final Double checkMateLimit = -0.9;
 
-    private static final Double equality = 0.05;
+    private static final Double equality = 0.1;
 
     public static Double getEqualLimit() {
         return equalLimit;
