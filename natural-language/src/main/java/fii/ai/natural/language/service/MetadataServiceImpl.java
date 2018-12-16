@@ -186,9 +186,11 @@ public class MetadataServiceImpl implements MetadataService {
     }
 
     private void updateCastlingMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
+
+        Side side=board.getSideToMove();
         Board after = board.clone();
         after.doMove(move);
-        CastleRight castleRight = after.getCastleRight(after.getSideToMove());
+        CastleRight castleRight = after.getCastleRight(side);
         CastlingStateMetadata meta = null;
         switch (castleRight) {
             case KING_AND_QUEEN_SIDE:
