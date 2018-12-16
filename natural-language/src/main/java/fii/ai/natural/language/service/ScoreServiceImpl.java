@@ -36,22 +36,25 @@ public class ScoreServiceImpl implements ScoreService {
      * @return the variants with maximal score
      */
     public List<MoveVariant> getMoveVariantsByScore(List<MoveVariant> variants,MoveVariant mainVariant,int depthForMainVariant,int indexOfMove) {
-        double variantScore;
+        double variantScore, avgColor1, avgColor2;
         double scoreMax = -5;
         boolean checkMate = false;
         List<MoveVariant> bestVariants = new ArrayList<>();
 
         for (MoveVariant variant : variants) {
-            variantScore = 0;
+            variantScore = avgColor1 = avgColor2 = 0;
             List<Node> moves = variant.getMoves();
 
 
             for (int i = 0; i < moves.size(); i += 2) {
-                variantScore += moves.get(i).getScore();
+                avgColor1 += moves.get(i).getScore();
             }
+            avgColor1 = avgColor1 / moves.size();
             for (int i = 1; i < moves.size(); i += 2) {
-                variantScore -= moves.get(i).getScore();
+                avgColor2 += moves.get(i).getScore();
             }
+            avgColor2 = avgColor2 / moves.size();
+            variantScore = avgColor1 - avgColor2;
             Node ultima;
             if (moves.size() % 2 == 0) {
                 ultima = moves.get(moves.size() - 2);
@@ -66,7 +69,7 @@ public class ScoreServiceImpl implements ScoreService {
                 bestVariants.add(variant);
                 checkMate = true;
                 variant.setScore(1.0);
-            } /*else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
+            } else if (!checkMate && getEqualityLimit(variantScore, scoreMax)) {
                 bestVariants.add(variant);
                 if (variantScore > scoreMax) {
                     scoreMax = variantScore;
@@ -74,7 +77,7 @@ public class ScoreServiceImpl implements ScoreService {
                 //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
                 //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
                 variant.setScore(variantScore);
-            }*/ else if (!checkMate && variantScore>scoreMax) {
+            } else if (!checkMate && variantScore > scoreMax) {
                 scoreMax = variantScore;
                 bestVariants.clear();
                 bestVariants.add(variant);
@@ -83,55 +86,66 @@ public class ScoreServiceImpl implements ScoreService {
         }
 
         if(mainVariant!=null){
-                variantScore = 0;
-                List<Node> moves = mainVariant.getMoves();
+            variantScore = 0;
+            List<Node> moves = mainVariant.getMoves();
 
-                int depthToLook=0;
-                if(indexOfMove+depthForMainVariant<=moves.size()){
-                    depthToLook=indexOfMove+depthForMainVariant;
-                }else{
-                    depthToLook= moves.size();
-                }
-                for (int i = indexOfMove; i < depthToLook; i += 2) {
-                    variantScore += moves.get(i).getScore();
-                }
-                for (int i = indexOfMove+1; i < depthToLook; i += 2) {
-                    variantScore -= moves.get(i).getScore();
-                }
-                Node ultima;
-                if (moves.size() % 2 == 0) {
-                    ultima = moves.get(moves.size() - 2);
-                } else {
-                    ultima = moves.get(moves.size() - 1);
-                }
+            int depthToLook=0;
+            if(indexOfMove+depthForMainVariant<=moves.size()){
+                depthToLook=indexOfMove+depthForMainVariant;
+            }else{
+                depthToLook= moves.size();
+            }
+            for (int i = indexOfMove; i < depthToLook; i += 2) {
+                variantScore += moves.get(i).getScore();
+            }
+            for (int i = indexOfMove+1; i < depthToLook; i += 2) {
+                variantScore -= moves.get(i).getScore();
+            }
+            Node ultima;
+            if (moves.size() % 2 == 0) {
+                ultima = moves.get(moves.size() - 2);
+            } else {
+                ultima = moves.get(moves.size() - 1);
+            }
 
-                //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
-                //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
-                if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
-                    if (checkMate == false) bestVariants.clear();
-                    bestVariants.add(mainVariant);
-                    checkMate = true;
-                    mainVariant.setScore(1.0);
-                } /*else if (!checkMate && abs(variantScore - scoreMax) <= ScoreInfo.getEquality()) {
-                    bestVariants.add(mainVariant);
-                    if (variantScore > scoreMax) {
-                        scoreMax = variantScore;
-                    }
-                    //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
-                    //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
-                    mainVariant.setScore(variantScore);
-                    //Model de calcul al scorului cu abs nu merge corect, pentru cazul in care scorul maxim era mare si scorul variantei era negativ dadea scorul
-                    //mai mare decat scorul maxim actual ceea ce nu ii ok asa ca momentan am sters aia si am comentat ce mai aveai pentru a putea testa
-                }*/ else if (!checkMate && variantScore>scoreMax) {
+            //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
+            //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
+            if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
+                if (checkMate == false) bestVariants.clear();
+                bestVariants.add(mainVariant);
+                checkMate = true;
+                mainVariant.setScore(1.0);
+            } else if (!checkMate && getEqualityLimit(variantScore, scoreMax) ) {
+                bestVariants.add(mainVariant);
+                if (variantScore > scoreMax) {
                     scoreMax = variantScore;
-                    bestVariants.clear();
-                    bestVariants.add(mainVariant);
-                    mainVariant.setScore(variantScore);
                 }
+                //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
+                //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
                 mainVariant.setScore(variantScore);
+                //Model de calcul al scorului cu abs nu merge corect, pentru cazul in care scorul maxim era mare si scorul variantei era negativ dadea scorul
+                //mai mare decat scorul maxim actual ceea ce nu ii ok asa ca momentan am sters aia si am comentat ce mai aveai pentru a putea testa
+            } else if (!checkMate && variantScore>scoreMax) {
+                scoreMax = variantScore;
+                bestVariants.clear();
+                bestVariants.add(mainVariant);
+                mainVariant.setScore(variantScore);
+            }
+            mainVariant.setScore(variantScore);
         }
 
         return bestVariants;
+    }
+
+    private final boolean getEqualityLimit(double variantScore, double scoreMax) {
+        double difference;
+        if(variantScore >= scoreMax)
+            difference = variantScore - scoreMax;
+        else
+            difference = scoreMax - variantScore;
+        if( difference <= ScoreInfo.getEquality())
+            return true;
+        return false;
     }
 
     public MoveVariant getBestVariantInCaseMistakeHappened(MovesTree movesTree,int indexOfMove){
