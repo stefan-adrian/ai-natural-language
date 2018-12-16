@@ -149,12 +149,16 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
 
+        if(bestVariants.size()==0){
+            bestVariants.add(mainVariant);
+        }
+
         return bestVariants;
     }
 
     private final boolean getBigImpact(List<Metadata> meta) {
         for (int i = 0; i < meta.size(); ++i) {
-            if (meta.get(i).getKey() == "PreCheckMate")
+            if (meta.get(i).getKey() .equals("PreCheckMate"))
                 return true;
         }
         return false;
