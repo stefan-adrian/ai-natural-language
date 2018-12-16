@@ -187,9 +187,9 @@ public class CommentMoveServiceImpl implements CommentMoveService {
         if (bestMoveVariant != null) {
             MoveVariant mainVariant = movesTree.getMainVariant();
             if (bestMoveVariant.getScore() - mainVariant.getScore() > ScoreInfo.getMediumImpactMove()) {
-                comment = "At this move was made a big mistake. With another move this could have happened in the next "+bestMoveVariant.getMoves().size()+" moves. ";
+                comment = "At this move was made a big mistake. With the move "+bestMoveVariant.getMoves().get(0).getMove()+" this could have happened in the next "+bestMoveVariant.getMoves().size()+" moves. ";
             } else if (bestMoveVariant.getScore() - mainVariant.getScore() > ScoreInfo.getSmallImpactMove()) {
-                comment = "At this move was made a mistake. With another move this could have happened in the next "+bestMoveVariant.getMoves().size()+" moves. ";
+                comment = "At this move was made a mistake. With the move "+bestMoveVariant.getMoves().get(0).getMove()+" this could have happened in the next "+bestMoveVariant.getMoves().size()+" moves. ";
             }
             if (comment != null) {
                 commentVariantService.commentMoveVariant(bestMoveVariant);
