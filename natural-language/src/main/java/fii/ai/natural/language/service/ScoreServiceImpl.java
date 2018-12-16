@@ -149,8 +149,10 @@ public class ScoreServiceImpl implements ScoreService {
             }
         }
 
-        if(bestVariants.size()==0){
+        if (bestVariants.size() == 0 && mainVariant != null) {
             bestVariants.add(mainVariant);
+        } else if(bestVariants.size()==0){
+            bestVariants.add(variants.get(0));
         }
 
         return bestVariants;
@@ -158,7 +160,7 @@ public class ScoreServiceImpl implements ScoreService {
 
     private final boolean getBigImpact(List<Metadata> meta) {
         for (int i = 0; i < meta.size(); ++i) {
-            if (meta.get(i).getKey() .equals("PreCheckMate"))
+            if (meta.get(i).getKey().equals("PreCheckMate"))
                 return true;
         }
         return false;
