@@ -45,11 +45,13 @@ public class ScoreServiceImpl implements ScoreService {
             }
 
             if (ultima.getScore() >= 1) {
-                if (checkMate == false) bestVariants.clear();
+                if (!checkMate) {
+                    bestVariants.clear();
+                }
                 bestVariants.add(variant);
                 checkMate = true;
                 variant.setScore(1.0);
-            } else if (bigError == false) {
+            } else if (!bigError && !checkMate) {
                 bigAdv = false;
                 avgColor1 = avgColor1 / movesCount;
                 movesCount = 0;
@@ -62,22 +64,22 @@ public class ScoreServiceImpl implements ScoreService {
                 avgColor2 = avgColor2 / movesCount;
                 variantScore = avgColor1 - avgColor2;
 
-                if (bigAdv == true) {
-                    if (existsBigAdv)
+                if (bigAdv) {
+                    if (existsBigAdv) {
                         bestVariants.add(variant);
-                    else {
+                    } else {
                         bestVariants.clear();
                         bestVariants.add(variant);
                     }
                     variant.setScore(variantScore);
                     existsBigAdv = true;
-                } else if (!checkMate && bigAdv == false && getEqualityLimit(variantScore, scoreMax)) {
+                } else if (!existsBigAdv && getEqualityLimit(variantScore, scoreMax)) {
                     bestVariants.add(variant);
                     if (variantScore > scoreMax) {
                         scoreMax = variantScore;
                     }
                     variant.setScore(variantScore);
-                } else if (!checkMate && bigAdv == false && variantScore > scoreMax) {
+                } else if (!existsBigAdv && variantScore > scoreMax) {
                     scoreMax = variantScore;
                     bestVariants.clear();
                     bestVariants.add(variant);
@@ -119,27 +121,29 @@ public class ScoreServiceImpl implements ScoreService {
             }
 
             if (ultima.getScore() >= 1) {
-                if (checkMate == false) bestVariants.clear();
+                if (!checkMate) {
+                    bestVariants.clear();
+                }
                 bestVariants.add(mainVariant);
                 checkMate = true;
                 mainVariant.setScore(1.0);
-            } else if (!bigError) {
+            } else if (!bigError && !checkMate) {
                 if (bigAdv) {
-                    if (existsBigAdv)
+                    if (existsBigAdv) {
                         bestVariants.add(mainVariant);
-                    else {
+                    } else {
                         bestVariants.clear();
                         bestVariants.add(mainVariant);
                     }
                     mainVariant.setScore(variantScore);
                     existsBigAdv = true;
-                } else if (!checkMate && !bigAdv && getEqualityLimit(variantScore, scoreMax)) {
+                } else if (!existsBigAdv && getEqualityLimit(variantScore, scoreMax)) {
                     bestVariants.add(mainVariant);
                     if (variantScore > scoreMax) {
                         scoreMax = variantScore;
                     }
                     mainVariant.setScore(variantScore);
-                } else if (!checkMate && bigAdv == false && variantScore > scoreMax) {
+                } else if (!existsBigAdv && variantScore > scoreMax) {
                     scoreMax = variantScore;
                     bestVariants.clear();
                     bestVariants.add(mainVariant);
@@ -147,33 +151,37 @@ public class ScoreServiceImpl implements ScoreService {
                 }
                 mainVariant.setScore(variantScore);
             }
+            mainVariant.setScore(variantScore);
         }
 
         if (bestVariants.size() == 0 && mainVariant != null) {
             bestVariants.add(mainVariant);
-        } else if(bestVariants.size()==0){
+        } else if (bestVariants.size() == 0) {
             bestVariants.add(variants.get(0));
         }
 
         return bestVariants;
     }
 
-    private final boolean getBigImpact(List<Metadata> meta) {
+    private boolean getBigImpact(List<Metadata> meta) {
         for (int i = 0; i < meta.size(); ++i) {
-            if (meta.get(i).getKey().equals("PreCheckMate"))
+            if (meta.get(i).getKey().equals("PreCheckMate")) {
                 return true;
+            }
         }
         return false;
     }
 
-    private final boolean getEqualityLimit(double variantScore, double scoreMax) {
+    private boolean getEqualityLimit(double variantScore, double scoreMax) {
         double difference;
-        if (variantScore >= scoreMax)
+        if (variantScore >= scoreMax) {
             difference = variantScore - scoreMax;
-        else
+        } else {
             difference = scoreMax - variantScore;
-        if (difference <= ScoreInfo.getEquality())
+        }
+        if (difference <= ScoreInfo.getEquality()) {
             return true;
+        }
         return false;
     }
 
