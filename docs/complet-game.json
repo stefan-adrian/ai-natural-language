@@ -1,0 +1,278 @@
+{
+    "initialStateFEN": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "mainVariant": {
+        "moves": [
+            {
+                "move": "wg2g3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "be7e6",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wf2f4",
+                "score": 0.0,
+                "variants": null
+            }
+            ,
+            {
+                "move": "bh7h6",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we2e3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bd7d5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we3e4",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "ba7a6",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we4d5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bf8c5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wc2c3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bd8e7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wd2d4",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bg8f6",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wd4c5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bb8d7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wd5d6",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "be7f8",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wd6c7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bh6h5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wa2a3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bf8e7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wa1a2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "ba6a5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wf1g2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bd7f8",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wc5c6",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "be6e5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wc6b7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bc8b7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wc7c8q",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "ba8c8",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wg2b7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "be7b7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wd1d7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bf8d7",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wb2b4",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bb7h1",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wb4a5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bh1g1",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we1e2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bg1h2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we2e1",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bh2h1",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we1e2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bh1h2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we2d3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bd7c5",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "wd3e3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bh2g3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we3e2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bg3g2",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "we2e3",
+                "score": 0.0,
+                "variants": null
+            },
+            {
+                "move": "bf6d5",
+                "score": 0.0,
+                "variants": null
+            }
+        ]
+    }
+}
