@@ -45,6 +45,7 @@ public class CommentMoveServiceImpl implements CommentMoveService {
         decorateWithPromotionComment(moveMetadata, move);
         decorateWithEqualScopeComment(movesTree, indexOfMove, moveMetadata, move);
         decorateWithMistakeComment(movesTree, indexOfMove);
+        decorateWithPreCheckMateComment(moveMetadata,move);
 
         if (movesTree.getMainVariant().getMoves().get(indexOfMove).getComments().size() != 0) {
             decorateWithImpactOnGameComment(moveMetadata, move);

@@ -157,6 +157,7 @@ public class ScoreServiceImpl implements ScoreService {
         if (bestVariants.size() == 0 && mainVariant != null) {
             bestVariants.add(mainVariant);
         } else if (bestVariants.size() == 0) {
+            variants.get(0).setScore(0.0);
             bestVariants.add(variants.get(0));
         }
 
