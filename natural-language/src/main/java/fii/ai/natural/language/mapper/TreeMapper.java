@@ -27,7 +27,7 @@ public class TreeMapper {
             Node node = new Node();
             node.setMove(inputNode.getMove());
             node.setScore(inputNode.getScore());
-            if(inputNode.getVariants()!=null) {
+            if (inputNode.getVariants() != null) {
                 node.setVariants(mapInputVariantsForVariantsInsideEachMove(inputNode.getVariants()));
             }
             moves.add(node);

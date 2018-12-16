@@ -200,16 +200,14 @@ public class CommentMoveServiceImpl implements CommentMoveService {
             }
         }
     }
-    private void decorateWithPreCheckMateComment(MoveMetadata moveMetadata, Node move )
-    {
-        Boolean preCheckMate=moveMetadata.getPreCheckMate();
-        String comment=null;
-        if(preCheckMate==true)
-        {
-            comment="At his next move the opponent can checkmate.";
+
+    private void decorateWithPreCheckMateComment(MoveMetadata moveMetadata, Node move) {
+        Boolean preCheckMate = moveMetadata.getPreCheckMate();
+        String comment = null;
+        if (preCheckMate == true) {
+            comment = "At his next move the opponent can checkmate.";
         }
-        if(comment!=null)
-        {
+        if (comment != null) {
             move.getComments().add(comment);
         }
 
