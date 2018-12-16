@@ -40,11 +40,11 @@ public class CommentMoveServiceImpl implements CommentMoveService {
         decorateWithCommentIfPieceWasTaken(moveMetadata, move);
         decorateWithCastlingPossibilityComment(movesTree, indexOfMove, moveMetadata, move);
         decorateWithIfCheckComment(moveMetadata, move);
-        decorateWithIfPossibleEnPassantComment(moveMetadata, move);
         decorateWithGameStateComment(moveMetadata, move);
         decorateWithPromotionComment(moveMetadata, move);
         decorateWithEqualScopeComment(movesTree, indexOfMove, moveMetadata, move);
         decorateWithMistakeComment(movesTree, indexOfMove);
+        decorateWithPreCheckMateComment(moveMetadata,move);
 
         if (movesTree.getMainVariant().getMoves().get(indexOfMove).getComments().size() != 0) {
             decorateWithImpactOnGameComment(moveMetadata, move);
@@ -200,16 +200,14 @@ public class CommentMoveServiceImpl implements CommentMoveService {
             }
         }
     }
-    private void decorateWithPreCheckMateComment(MoveMetadata moveMetadata, Node move )
-    {
-        Boolean preCheckMate=moveMetadata.getPreCheckMate();
-        String comment=null;
-        if(preCheckMate==true)
-        {
-            comment="At his next move the opponent can checkmate.";
+
+    private void decorateWithPreCheckMateComment(MoveMetadata moveMetadata, Node move) {
+        Boolean preCheckMate = moveMetadata.getPreCheckMate();
+        String comment = null;
+        if (preCheckMate == true) {
+            comment = "At his next move the opponent can checkmate.";
         }
-        if(comment!=null)
-        {
+        if (comment != null) {
             move.getComments().add(comment);
         }
 

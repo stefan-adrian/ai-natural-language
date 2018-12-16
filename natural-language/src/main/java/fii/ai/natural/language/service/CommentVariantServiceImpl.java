@@ -2,7 +2,6 @@ package fii.ai.natural.language.service;
 
 import fii.ai.natural.language.mapper.MetadataMapper;
 import fii.ai.natural.language.model.MoveMetadata;
-import fii.ai.natural.language.model.MovePosition;
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.Node;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +29,10 @@ public class CommentVariantServiceImpl implements CommentVariantService {
         commentGameState(moveVariant);
         commentChecks(moveVariant);
         commentCastlingState(moveVariant);
+        commentEqualScope(moveVariant);
     }
 
     private void commentPiecesTaken(MoveVariant moveVariant) {
-        //TODO COSMIN Fix function, this function always add comment with move color, even when is not necessary because no piece was taken
         List<String> playerPiecesTaken = new ArrayList<>();
         List<String> oponentPiecesTaken = new ArrayList<>();
         String playerColor = new String();
@@ -83,7 +82,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
             comment = comment.substring(0, comment.length() - 2);
             comment += ".";
         }
-        if(playerPiecesTaken.size()>0||oponentPiecesTaken.size()>0) {
+        if (playerPiecesTaken.size() > 0 || oponentPiecesTaken.size() > 0) {
             moveVariant.getComments().add(comment);
         }
     }
@@ -126,7 +125,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
         if (playerChecks.size() == 0 && oponentChecks.size() > 0) {
             comment += " checked " + oponentColor + " " + (Integer) oponentChecks.size() + " times.";
         }
-        if(playerChecks.size()>0||oponentChecks.size()>0) {
+        if (playerChecks.size() > 0 || oponentChecks.size() > 0) {
             moveVariant.getComments().add(comment);
         }
     }
@@ -201,7 +200,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
             moveIndex++;
         }
 
-        if(!moveColor.isEmpty()) {
+        if (!moveColor.isEmpty()) {
             moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
         }
         if (getComment.size() > 0 && takeComment.size() > 0) {
@@ -216,7 +215,6 @@ public class CommentVariantServiceImpl implements CommentVariantService {
     }
 
     private void commentPromoteToPiece(MoveVariant moveVariant) {
-        //TODO COSMIN Same as the one for pieces taken
         String moveColor = new String();
         List<String> commentColor = new ArrayList<>();
         List<String> commentOpponent = new ArrayList<>();
@@ -244,8 +242,33 @@ public class CommentVariantServiceImpl implements CommentVariantService {
         }
     }
 
+    private void commentEqualScope(MoveVariant moveVariant) {
+        List<Boolean> commentColor = new ArrayList<>();
+        List<Boolean> commentOpponent = new ArrayList<>();
+        Node move = moveVariant.getMoves().get(0);
+        MoveMetadata moveMeta = metadataMapper.map(move.getMetadata());
+        String moveColor = moveMeta.getColor();
+        for (Node node : moveVariant.getMoves()) {
+            if (node.getMetadata().size() != 0) {
+                MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
+                if (moveMetadata.getEqualScope() == true && moveMetadata.getColor().equals(moveColor)) {
+                    commentColor.add(moveMetadata.getEqualScope());
+                } else if (moveMetadata.getEqualScope() == true && !moveMetadata.getColor().equals(moveColor)) {
+                    commentOpponent.add(moveMetadata.getEqualScope());
+                }
+            }
+        }
+        moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
+        if (commentColor.size() > 0 && commentOpponent.size() > 0) {
+            moveVariant.getComments().add("Both sides play with equal scope.");
+        } else if (commentColor.size() > 0 && commentOpponent.size() == 0) {
+            moveVariant.getComments().add(moveColor + " side plays with equal scope.");
+        } else if (commentColor.size() == 0 && commentOpponent.size() > 0) {
+            moveVariant.getComments().add(moveColor + " opponent plays with equal scope.");
+        }
+    }
+
     private void commentGameState(MoveVariant moveVariant) {
-        //TODO COSMIN This one always adds a empty comment
         int moveIndex = 1;
         for (Node node : moveVariant.getMoves()) {
             if (node.getMetadata().size() != 0) {

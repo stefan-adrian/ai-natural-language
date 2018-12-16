@@ -40,27 +40,6 @@ public class GameService {
 
     public List<MoveComment> commentMovesTree(MovesTree movesTree) {
 
-        //This commented code is only yo check to test comment functionality until the real decoration with metadata is made
-        /*movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceColorMetadata("White"));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceNameMetadata("Queen"));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new PieceTakenMetadata("Queen"));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new EnPassantMetadata(true));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new CheckMetadata(Arrays.asList("Queen")));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new MoveGradeMetadata(2));
-        movesTree.getMainVariant().getMoves().get(0).getMetadata().add(new CastlingStateMetadata("kq"));
-
-        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new PieceColorMetadata("Black"));
-        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new PieceNameMetadata("King"));
-        movesTree.getMainVariant().getMoves().get(1).getMetadata().add(new MoveGradeMetadata(-2));
-
-        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new PieceColorMetadata("White"));
-        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new PieceNameMetadata("Queen"));
-        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new CheckMetadata(Arrays.asList("Queen")));
-        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new MoveGradeMetadata(3));
-        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new CastlingStateMetadata("q"));
-        movesTree.getMainVariant().getMoves().get(2).getMetadata().add(new GameStateMetadata("checkmate"));*/
-
-
         metadataService.decorateWithMetadata(movesTree);
         commentMoveService.commentMovesTree(movesTree);
         return concatenateComments(movesTree);
@@ -69,7 +48,7 @@ public class GameService {
     private List<MoveComment> concatenateComments(MovesTree movesTree) {
         moveCommentList = new ArrayList<>();
         for (int index = 0; index < movesTree.getMainVariant().getMoves().size(); index++) {
-            if(movesTree.getMainVariant().getMoves().get(index).getComments().size()!=0) {
+            if (movesTree.getMainVariant().getMoves().get(index).getComments().size() != 0) {
                 moveCommentList.add(new MoveComment(index + 1, movesTree.getMainVariant().getMoves().get(index).getComments(), getEvaluationForAMove(movesTree.getMainVariant().getMoves().get(index).getScore())));
             }
         }
@@ -95,11 +74,7 @@ public class GameService {
     public List<OptimalMove> commentOptimalMoves(MovePosition movePosition) {
         List<OptimalMove> optimalMoves = new ArrayList<>();
         metadataService.decorateWithMetadataOptimalMoves(movePosition);
-        //List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants());
-        /* Pentru cel care face partea de comentarii a variante poate sa cometeze linia de mai sus si sa o lase
-        pe asta pentru a vedea cum comenteaza variantele de la movePosition*/
-        //List<MoveVariant> bestVariants = movePosition.getVariants();
-        List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants(),null,0,0);
+        List<MoveVariant> bestVariants = scoreService.getMoveVariantsByScore(movePosition.getVariants(), null, 0, 0);
 
         for (MoveVariant moveVariant : bestVariants) {
             commentVariantService.commentMoveVariant(moveVariant);
