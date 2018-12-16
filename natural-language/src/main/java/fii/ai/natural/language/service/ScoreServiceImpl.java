@@ -38,22 +38,26 @@ public class ScoreServiceImpl implements ScoreService {
     public List<MoveVariant> getMoveVariantsByScore(List<MoveVariant> variants,MoveVariant mainVariant,int depthForMainVariant,int indexOfMove) {
         double variantScore, avgColor1, avgColor2;
         double scoreMax = -5;
+        int movesCount;
         boolean checkMate = false;
         List<MoveVariant> bestVariants = new ArrayList<>();
 
         for (MoveVariant variant : variants) {
-            variantScore = avgColor1 = avgColor2 = 0;
+            variantScore = avgColor1 = avgColor2 = movesCount = 0;
             List<Node> moves = variant.getMoves();
 
 
             for (int i = 0; i < moves.size(); i += 2) {
                 avgColor1 += moves.get(i).getScore();
+                movesCount++;
             }
-            avgColor1 = avgColor1 / moves.size();
+            avgColor1 = avgColor1 / movesCount;
+            movesCount = 0;
             for (int i = 1; i < moves.size(); i += 2) {
                 avgColor2 += moves.get(i).getScore();
+                movesCount++;
             }
-            avgColor2 = avgColor2 / moves.size();
+            avgColor2 = avgColor2 / movesCount;
             variantScore = avgColor1 - avgColor2;
             Node ultima;
             if (moves.size() % 2 == 0) {
@@ -86,7 +90,7 @@ public class ScoreServiceImpl implements ScoreService {
         }
 
         if(mainVariant!=null){
-            variantScore = 0;
+            variantScore = avgColor1 = avgColor2 = movesCount = 0;
             List<Node> moves = mainVariant.getMoves();
 
             int depthToLook=0;
@@ -96,11 +100,17 @@ public class ScoreServiceImpl implements ScoreService {
                 depthToLook= moves.size();
             }
             for (int i = indexOfMove; i < depthToLook; i += 2) {
-                variantScore += moves.get(i).getScore();
+                avgColor1 += moves.get(i).getScore();
+                movesCount++;
             }
+            avgColor1 /= movesCount;
+            movesCount = 0;
             for (int i = indexOfMove+1; i < depthToLook; i += 2) {
-                variantScore -= moves.get(i).getScore();
+                avgColor2 += moves.get(i).getScore();
+                movesCount++;
             }
+            avgColor2 /= movesCount;
+            variantScore = avgColor1 - avgColor2;
             Node ultima;
             if (moves.size() % 2 == 0) {
                 ultima = moves.get(moves.size() - 2);
