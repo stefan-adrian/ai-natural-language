@@ -57,7 +57,21 @@ public class ScoreServiceImpl implements ScoreService {
                 bigError = getBigImpact(moves.get(i).getMetadata());
             }
 
-            if(bigError == false){
+            Node ultima;
+            if (moves.size() % 2 == 0) {
+                ultima = moves.get(moves.size() - 2);
+            } else {
+                ultima = moves.get(moves.size() - 1);
+            }
+
+            if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
+                if (checkMate == false) bestVariants.clear();
+                bestVariants.add(variant);
+                checkMate = true;
+                variant.setScore(1.0);
+            }
+
+            else if(bigError == false){
                 bigAdv = false;
                 avgColor1 = avgColor1 / movesCount;
                 movesCount = 0;
@@ -70,22 +84,9 @@ public class ScoreServiceImpl implements ScoreService {
                 avgColor2 = avgColor2 / movesCount;
                 variantScore = avgColor1 - avgColor2;
 
-                Node ultima;
-                if (moves.size() % 2 == 0) {
-                    ultima = moves.get(moves.size() - 2);
-                } else {
-                    ultima = moves.get(moves.size() - 1);
-                }
-
                 //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
                 //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
-                if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
-                    if (checkMate == false) bestVariants.clear();
-                    bestVariants.add(variant);
-                    checkMate = true;
-                    variant.setScore(1.0);
-                }
-                else if (bigAdv == true) {
+                if (bigAdv == true) {
                     if(existsBigAdv)
                         bestVariants.add(variant);
                     else {
@@ -144,17 +145,17 @@ public class ScoreServiceImpl implements ScoreService {
                 ultima = moves.get(moves.size() - 1);
             }
 
+            if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
+                if (checkMate == false) bestVariants.clear();
+                bestVariants.add(mainVariant);
+                checkMate = true;
+                mainVariant.setScore(1.0);
+            }
 
-            if(!bigError){
+            else if(!bigError){
                 //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
                 //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
-                if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
-                    if (checkMate == false) bestVariants.clear();
-                    bestVariants.add(mainVariant);
-                    checkMate = true;
-                    mainVariant.setScore(1.0);
-                }
-                else if(bigAdv==true){
+                if(bigAdv){
                     if(existsBigAdv)
                         bestVariants.add(mainVariant);
                     else {
@@ -164,7 +165,7 @@ public class ScoreServiceImpl implements ScoreService {
                     mainVariant.setScore(variantScore);
                     existsBigAdv=true;
                 }
-                else if (!checkMate && bigAdv == false && getEqualityLimit(variantScore, scoreMax) ) {
+                else if (!checkMate && !bigAdv && getEqualityLimit(variantScore, scoreMax) ) {
                     bestVariants.add(mainVariant);
                     if (variantScore > scoreMax) {
                         scoreMax = variantScore;
