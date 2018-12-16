@@ -40,7 +40,6 @@ public class CommentMoveServiceImpl implements CommentMoveService {
         decorateWithCommentIfPieceWasTaken(moveMetadata, move);
         decorateWithCastlingPossibilityComment(movesTree, indexOfMove, moveMetadata, move);
         decorateWithIfCheckComment(moveMetadata, move);
-        decorateWithIfPossibleEnPassantComment(moveMetadata, move);
         decorateWithGameStateComment(moveMetadata, move);
         decorateWithPromotionComment(moveMetadata, move);
         decorateWithEqualScopeComment(movesTree, indexOfMove, moveMetadata, move);
