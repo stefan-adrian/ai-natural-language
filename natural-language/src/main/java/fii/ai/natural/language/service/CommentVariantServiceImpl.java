@@ -30,6 +30,7 @@ public class CommentVariantServiceImpl implements CommentVariantService {
         commentGameState(moveVariant);
         commentChecks(moveVariant);
         commentCastlingState(moveVariant);
+        commentEqualScope(moveVariant);
     }
 
     private void commentPiecesTaken(MoveVariant moveVariant) {
@@ -241,6 +242,33 @@ public class CommentVariantServiceImpl implements CommentVariantService {
             moveVariant.getComments().add(moveColor + " side promoted pawns to " + commentColor + ".");
         } else if (commentColor.size() == 0 && commentOpponent.size() > 0) {
             moveVariant.getComments().add(moveColor + " opponent promoted pawns to " + commentOpponent + ".");
+        }
+    }
+
+    private void commentEqualScope(MoveVariant moveVariant) {
+        List<Boolean> commentColor = new ArrayList<>();
+        List<Boolean> commentOpponent = new ArrayList<>();
+        Node move = moveVariant.getMoves().get(0);
+        MoveMetadata moveMeta = metadataMapper.map(move.getMetadata());
+        String moveColor = moveMeta.getColor();
+        for (Node node : moveVariant.getMoves()) {
+            if (node.getMetadata().size() != 0) {
+                MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
+                //moveMetadata.setEqualScope(true);
+                if (moveMetadata.getEqualScope() == true && moveMetadata.getColor().equals(moveColor)) {
+                    commentColor.add(moveMetadata.getEqualScope());
+                } else if (moveMetadata.getEqualScope() == true && !moveMetadata.getColor().equals(moveColor)) {
+                    commentOpponent.add(moveMetadata.getEqualScope());
+                }
+            }
+        }
+        moveColor = moveColor.substring(0, 1).toUpperCase() + moveColor.substring(1);
+        if (commentColor.size() > 0 && commentOpponent.size() > 0) {
+            moveVariant.getComments().add("Both sides play with equal scope.");
+        } else if (commentColor.size() > 0 && commentOpponent.size() == 0) {
+            moveVariant.getComments().add(moveColor + " side plays with equal scope.");
+        } else if (commentColor.size() == 0 && commentOpponent.size() > 0) {
+            moveVariant.getComments().add(moveColor + " opponent plays with equal scope.");
         }
     }
 
