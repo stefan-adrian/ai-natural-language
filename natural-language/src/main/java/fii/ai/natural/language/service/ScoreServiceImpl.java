@@ -138,6 +138,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
             avgColor2 /= movesCount;
             variantScore = avgColor1 - avgColor2;
+
             Node ultima;
             if (moves.size() % 2 == 0) {
                 ultima = moves.get(moves.size() - 2);
