@@ -1,8 +1,10 @@
 package fii.ai.natural.language.service;
 
+import fii.ai.natural.language.model.Metadata;
 import fii.ai.natural.language.model.MoveVariant;
 import fii.ai.natural.language.model.MovesTree;
 import fii.ai.natural.language.model.Node;
+import fii.ai.natural.language.model.metadata.PreCheckMateMetadata;
 import fii.ai.natural.language.utils.ScoreInfo;
 import org.springframework.stereotype.Service;
 
@@ -39,60 +41,82 @@ public class ScoreServiceImpl implements ScoreService {
         double variantScore, avgColor1, avgColor2;
         double scoreMax = -5;
         int movesCount;
-        boolean checkMate = false;
+        boolean checkMate = false, bigError, bigAdv, existsBigAdv = false;
         List<MoveVariant> bestVariants = new ArrayList<>();
 
         for (MoveVariant variant : variants) {
             variantScore = avgColor1 = avgColor2 = movesCount = 0;
+            bigError = false;
+
             List<Node> moves = variant.getMoves();
 
-
+            List<Metadata> m = new ArrayList<>();
             for (int i = 0; i < moves.size(); i += 2) {
                 avgColor1 += moves.get(i).getScore();
                 movesCount++;
-            }
-            avgColor1 = avgColor1 / movesCount;
-            movesCount = 0;
-            for (int i = 1; i < moves.size(); i += 2) {
-                avgColor2 += moves.get(i).getScore();
-                movesCount++;
-            }
-            avgColor2 = avgColor2 / movesCount;
-            variantScore = avgColor1 - avgColor2;
-            Node ultima;
-            if (moves.size() % 2 == 0) {
-                ultima = moves.get(moves.size() - 2);
-            } else {
-                ultima = moves.get(moves.size() - 1);
+                bigError = getBigImpact(moves.get(i).getMetadata());
             }
 
-            //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
-            //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
-            if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
-                if (checkMate == false) bestVariants.clear();
-                bestVariants.add(variant);
-                checkMate = true;
-                variant.setScore(1.0);
-            } else if (!checkMate && getEqualityLimit(variantScore, scoreMax)) {
-                bestVariants.add(variant);
-                if (variantScore > scoreMax) {
-                    scoreMax = variantScore;
+            if(bigError == false){
+                bigAdv = false;
+                avgColor1 = avgColor1 / movesCount;
+                movesCount = 0;
+                for (int i = 1; i < moves.size(); i += 2) {
+                    avgColor2 += moves.get(i).getScore();
+                    movesCount++;
+                    bigAdv = getBigImpact(moves.get(i).getMetadata());
                 }
-                //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
-                //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
-                variant.setScore(variantScore);
-            } else if (!checkMate && variantScore > scoreMax) {
-                scoreMax = variantScore;
-                bestVariants.clear();
-                bestVariants.add(variant);
-                variant.setScore(variantScore);
+
+                avgColor2 = avgColor2 / movesCount;
+                variantScore = avgColor1 - avgColor2;
+
+                Node ultima;
+                if (moves.size() % 2 == 0) {
+                    ultima = moves.get(moves.size() - 2);
+                } else {
+                    ultima = moves.get(moves.size() - 1);
+                }
+
+                //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
+                //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
+                if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
+                    if (checkMate == false) bestVariants.clear();
+                    bestVariants.add(variant);
+                    checkMate = true;
+                    variant.setScore(1.0);
+                }
+                else if (bigAdv == true) {
+                    if(existsBigAdv)
+                        bestVariants.add(variant);
+                    else {
+                        bestVariants.clear();
+                        bestVariants.add(variant);
+                    }
+                    variant.setScore(variantScore);
+                    existsBigAdv=true;
+                }
+                else if (!checkMate && bigAdv==false && getEqualityLimit(variantScore, scoreMax)) {
+                    bestVariants.add(variant);
+                    if (variantScore > scoreMax) {
+                        scoreMax = variantScore;
+                    }
+                    //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
+                    //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
+                    variant.setScore(variantScore);
+                } else if (!checkMate && bigAdv==false && variantScore > scoreMax) {
+                    scoreMax = variantScore;
+                    bestVariants.clear();
+                    bestVariants.add(variant);
+                    variant.setScore(variantScore);
+                }
+
             }
         }
 
         if(mainVariant!=null){
             variantScore = avgColor1 = avgColor2 = movesCount = 0;
             List<Node> moves = mainVariant.getMoves();
-
+            bigError = bigAdv = false;
             int depthToLook=0;
             if(indexOfMove+depthForMainVariant<=moves.size()){
                 depthToLook=indexOfMove+depthForMainVariant;
@@ -102,12 +126,14 @@ public class ScoreServiceImpl implements ScoreService {
             for (int i = indexOfMove; i < depthToLook; i += 2) {
                 avgColor1 += moves.get(i).getScore();
                 movesCount++;
+                bigError=getBigImpact(moves.get(i).getMetadata());
             }
             avgColor1 /= movesCount;
             movesCount = 0;
             for (int i = indexOfMove+1; i < depthToLook; i += 2) {
                 avgColor2 += moves.get(i).getScore();
                 movesCount++;
+                bigAdv = getBigImpact(moves.get(i).getMetadata());
             }
             avgColor2 /= movesCount;
             variantScore = avgColor1 - avgColor2;
@@ -118,33 +144,55 @@ public class ScoreServiceImpl implements ScoreService {
                 ultima = moves.get(moves.size() - 1);
             }
 
-            //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
-            //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
-            if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
-                if (checkMate == false) bestVariants.clear();
-                bestVariants.add(mainVariant);
-                checkMate = true;
-                mainVariant.setScore(1.0);
-            } else if (!checkMate && getEqualityLimit(variantScore, scoreMax) ) {
-                bestVariants.add(mainVariant);
-                if (variantScore > scoreMax) {
-                    scoreMax = variantScore;
+
+            if(!bigError){
+                //Am schimbat aici in 1 ca sa reprezinte sah matul ca de fapt limita aia reprezinta daca la mutarea urmatoare poti da sah mat
+                //Am lasat si ce ai scris tu in comentariu ca sa stii tu la ce te-ai gandit cand ai scris pentru cand o sa schimbi
+                if (ultima.getScore() >= 1/*ScoreInfo.getCheckMateLimit()*/) {
+                    if (checkMate == false) bestVariants.clear();
+                    bestVariants.add(mainVariant);
+                    checkMate = true;
+                    mainVariant.setScore(1.0);
                 }
-                //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
-                //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
-                mainVariant.setScore(variantScore);
-                //Model de calcul al scorului cu abs nu merge corect, pentru cazul in care scorul maxim era mare si scorul variantei era negativ dadea scorul
-                //mai mare decat scorul maxim actual ceea ce nu ii ok asa ca momentan am sters aia si am comentat ce mai aveai pentru a putea testa
-            } else if (!checkMate && variantScore>scoreMax) {
-                scoreMax = variantScore;
-                bestVariants.clear();
-                bestVariants.add(mainVariant);
+                else if(bigAdv==true){
+                    if(existsBigAdv)
+                        bestVariants.add(mainVariant);
+                    else {
+                        bestVariants.clear();
+                        bestVariants.add(mainVariant);
+                    }
+                    mainVariant.setScore(variantScore);
+                    existsBigAdv=true;
+                }
+                else if (!checkMate && bigAdv == false && getEqualityLimit(variantScore, scoreMax) ) {
+                    bestVariants.add(mainVariant);
+                    if (variantScore > scoreMax) {
+                        scoreMax = variantScore;
+                    }
+                    //Am adaugat scorul la variante pentru a putea vedea dupa la calcularea greselilor cat de mare este greseala,
+                    //si pentru a calcula cat de mare e greseala am nevoie de scorul pe varianta deci cand modifici tu functia de scor sa tii cont si de asta
+                    mainVariant.setScore(variantScore);
+                    //Model de calcul al scorului cu abs nu merge corect, pentru cazul in care scorul maxim era mare si scorul variantei era negativ dadea scorul
+                    //mai mare decat scorul maxim actual ceea ce nu ii ok asa ca momentan am sters aia si am comentat ce mai aveai pentru a putea testa
+                } else if (!checkMate && bigAdv==false && variantScore>scoreMax) {
+                    scoreMax = variantScore;
+                    bestVariants.clear();
+                    bestVariants.add(mainVariant);
+                    mainVariant.setScore(variantScore);
+                }
                 mainVariant.setScore(variantScore);
             }
-            mainVariant.setScore(variantScore);
         }
 
         return bestVariants;
+    }
+
+    private final boolean getBigImpact(List<Metadata> meta) {
+        for (int i = 0; i < meta.size(); ++i) {
+            if (meta.get(i).getKey() == "PreCheckMate")
+                return true;
+        }
+        return false;
     }
 
     private final boolean getEqualityLimit(double variantScore, double scoreMax) {
