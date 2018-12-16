@@ -30,7 +30,7 @@ public class ScoreInfo {
      */
     private static final Double checkMateLimit = -0.9;
 
-    private static final Double equality = 0.1;
+    private static final Double equality = 0.0;
 
     public static Double getEqualLimit() {
         return equalLimit;
