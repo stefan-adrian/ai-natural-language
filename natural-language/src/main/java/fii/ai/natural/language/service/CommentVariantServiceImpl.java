@@ -28,7 +28,6 @@ public class CommentVariantServiceImpl implements CommentVariantService {
         commentPromoteToPiece(moveVariant);
         commentGameState(moveVariant);
         commentChecks(moveVariant);
-        commentCastlingState(moveVariant);
         commentEqualScope(moveVariant);
     }
 
@@ -115,15 +114,15 @@ public class CommentVariantServiceImpl implements CommentVariantService {
 
         String comment = new String(playerColor);
         if (playerChecks.size() > 0 && oponentChecks.size() > 0) {
-            comment = comment += " checked " + oponentColor + " " + ((Integer) oponentChecks.size()).toString() + " times and " + oponentColor + " checked " + playerColor;
+            comment = comment += " was checked by " + oponentColor + " " + ((Integer) oponentChecks.size()).toString() + " times and " + oponentColor + " was checked by " + playerColor;
             comment += " " + (Integer) playerChecks.size() + " times.";
         }
         if (playerChecks.size() > 0 && oponentChecks.size() == 0) {
             comment = new String(oponentColor);
-            comment += " checked " + playerColor + " " + (Integer) playerChecks.size() + " times.";
+            comment += " was checked by " + playerColor + " " + (Integer) playerChecks.size() + " times.";
         }
         if (playerChecks.size() == 0 && oponentChecks.size() > 0) {
-            comment += " checked " + oponentColor + " " + (Integer) oponentChecks.size() + " times.";
+            comment += " was checked by " + oponentColor + " " + (Integer) oponentChecks.size() + " times.";
         }
         if (playerChecks.size() > 0 || oponentChecks.size() > 0) {
             moveVariant.getComments().add(comment);

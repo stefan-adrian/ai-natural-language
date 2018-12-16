@@ -85,10 +85,10 @@ public class ScoreServiceImpl implements ScoreService {
                     bestVariants.add(variant);
                     variant.setScore(variantScore);
                 }
+                //System.out.println("Big adv: "+bigAdv+" Big error"+bigError+" Score: "+variantScore);
 
             }
         }
-
         if (mainVariant != null) {
             variantScore = avgColor1 = avgColor2 = movesCount = 0;
             List<Node> moves = mainVariant.getMoves();
