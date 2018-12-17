@@ -1,0 +1,65 @@
+{
+  "initialStateFEN": "4K3/2Q3N1/P1PP4/2p2n2/5P2/R2qp1b1/1n6/r3k2r b - - 0 1",
+  "variants": [
+    {
+      "moves": [
+        {
+          "move": "bf5g7",
+          "score": -0.9
+        },
+        {
+          "move": "wc7g7",
+          "score": -0.8
+        },
+        {
+          "move": "bg3f4",
+          "score": 0.8
+        },
+        {
+          "move": "wg7b2",
+          "score": 0.2
+        },
+        {
+          "move": "be3e4",
+          "score": 0.8
+        },
+        {
+          "move": "we8f8",
+          "score": 0.7
+        }
+      ],
+      "algorithmName": "MinMax",
+      "strategyNames": [
+        "PAWN_ADVANCE_STRATEGY"
+      ]
+    },
+    {
+      "moves": [
+        {
+          "move": "bh1h8",
+          "score": 0.6
+        },
+        {
+          "move": "we8d7",
+          "score": 0.01
+        },
+        {
+          "move": "bc5d6",
+          "score": 0.3
+        },
+        {
+          "move": "wd7e6",
+          "score": -0.3
+        },
+        {
+          "move": "bd6c7",
+          "score": 0.3
+        }
+      ],
+      "algorithmName": "NegaMax",
+      "strategyNames": [
+        "PAWN_ADVANCE_STRATEGY"
+      ]
+    }
+  ]
+}
