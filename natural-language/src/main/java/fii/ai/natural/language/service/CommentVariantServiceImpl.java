@@ -130,49 +130,52 @@ public class CommentVariantServiceImpl implements CommentVariantService {
     }
 
     private void commentCastlingState(MoveVariant moveVariant) {
-        Node firstMove = moveVariant.getMoves().get(0);
-        MoveMetadata firstMoveMetadata = metadataMapper.map(firstMove.getMetadata());
-        String playerColor = firstMoveMetadata.getColor();
-        int moveIndex = 1;
-        int kingSideIndex = 0;
-        int queenSideIndex = 0;
-        int noSideIndex = 0;
-        boolean kingSideOk = false;
-        boolean queenSideOk = false;
-        boolean noSideOk = false;
-        for (Node node : moveVariant.getMoves()) {
-            MoveMetadata moveMetadata = metadataMapper.map(node.getMetadata());
-            if (moveIndex % 2 == 1 && moveMetadata.getCastlingState().equals(firstMoveMetadata.getCastlingState()) == false) {
-                if (moveMetadata.getCastlingState().equals("k") && kingSideOk == false) {
-                    kingSideIndex = moveIndex;
-                    kingSideOk = true;
+        if(moveVariant.getMoves().size()>1) {
+            Node firstMove = moveVariant.getMoves().get(0);
+            MoveMetadata firstMoveMetadata = metadataMapper.map(firstMove.getMetadata());
+            String playerColor = firstMoveMetadata.getColor();
+            int moveIndex = 2;
+            int kingSideIndex = 0;
+            int queenSideIndex = 0;
+            int noSideIndex = 0;
+            boolean kingSideOk = false;
+            boolean queenSideOk = false;
+            boolean noSideOk = false;
+            for (int nodeIndex =1;nodeIndex<moveVariant.getMoves().size();nodeIndex++) {
+                MoveMetadata moveMetadata = metadataMapper.map(moveVariant.getMoves().get(nodeIndex).getMetadata());
+                if (moveIndex % 2 == 1 && !moveMetadata.getCastlingState().equals(firstMoveMetadata.getCastlingState())) {
+                    if (moveMetadata.getCastlingState().equals("k") && kingSideOk == false) {
+                        kingSideIndex = moveIndex;
+                        kingSideOk = true;
+                    }
+                    if (moveMetadata.getCastlingState().equals("q") && queenSideOk == false) {
+                        queenSideIndex = moveIndex;
+                        queenSideOk = true;
+                    }
+                    if (moveMetadata.getCastlingState() == null) {
+                        noSideIndex = moveIndex;
+                        break;
+                    }
                 }
-                if (moveMetadata.getCastlingState().equals("q") && queenSideOk == false) {
-                    queenSideIndex = moveIndex;
-                    queenSideOk = true;
-                }
-                if (moveMetadata.getCastlingState() == null) {
-                    noSideIndex = moveIndex;
-                    break;
-                }
+                moveIndex++;
+
             }
-            moveIndex++;
-        }
-        String comment = null;
-        if (kingSideIndex > 0 && noSideIndex > 0) {
-            comment = new String(playerColor);
-            comment += " can only do the king side castle since move " + (Integer) kingSideIndex + " can't do any castle since " + (Integer) noSideIndex + ".";
-        }
-        if (queenSideIndex > 0 && noSideIndex > 0) {
-            comment = new String(playerColor);
-            comment += " can only do the queen side castle since move " + (Integer) kingSideIndex + " can't do any castle since " + (Integer) noSideIndex + ".";
-        }
-        if (kingSideIndex == 0 && queenSideIndex == 0 && noSideIndex > 0) {
-            comment = new String(playerColor);
-            comment += " can no longer do any castle since move " + noSideIndex;
-        }
-        if (comment != null) {
-            moveVariant.getComments().add(comment);
+            String comment = null;
+            if (kingSideIndex > 0 && noSideIndex > 0) {
+                comment = new String(playerColor);
+                comment += " can only do the king side castle since move " + (Integer) kingSideIndex + " can't do any castle since " + (Integer) noSideIndex + ".";
+            }
+            if (queenSideIndex > 0 && noSideIndex > 0) {
+                comment = new String(playerColor);
+                comment += " can only do the queen side castle since move " + (Integer) kingSideIndex + " can't do any castle since " + (Integer) noSideIndex + ".";
+            }
+            if (kingSideIndex == 0 && queenSideIndex == 0 && noSideIndex > 0) {
+                comment = new String(playerColor);
+                comment += " can no longer do any castle since move " + noSideIndex;
+            }
+            if (comment != null) {
+                moveVariant.getComments().add(comment);
+            }
         }
     }
 

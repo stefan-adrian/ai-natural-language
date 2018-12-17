@@ -34,7 +34,8 @@ public class ScoreServiceImpl implements ScoreService {
             for (int i = 0; i < moves.size(); i += 2) {
                 avgColor1 += moves.get(i).getScore();
                 movesCount++;
-                bigError = getBigImpact(moves.get(i).getMetadata());
+                if(!bigError)
+                    bigError = getBigImpact(moves.get(i).getMetadata());
             }
 
             Node ultima;
@@ -44,10 +45,11 @@ public class ScoreServiceImpl implements ScoreService {
                 ultima = moves.get(moves.size() - 1);
             }
 
-            if (ultima.getScore() >= 1) {
+            if (ultima.getScore() >= 0.99) {
                 if (!checkMate) {
                     bestVariants.clear();
                 }
+
                 bestVariants.add(variant);
                 checkMate = true;
                 variant.setScore(1.0);
@@ -58,7 +60,8 @@ public class ScoreServiceImpl implements ScoreService {
                 for (int i = 1; i < moves.size(); i += 2) {
                     avgColor2 += moves.get(i).getScore();
                     movesCount++;
-                    bigAdv = getBigImpact(moves.get(i).getMetadata());
+                    if(!bigAdv)
+                        bigAdv = getBigImpact(moves.get(i).getMetadata());
                 }
 
                 avgColor2 = avgColor2 / movesCount;
@@ -71,7 +74,7 @@ public class ScoreServiceImpl implements ScoreService {
                         bestVariants.clear();
                         bestVariants.add(variant);
                     }
-                    variant.setScore(variantScore);
+                    variant.setScore(0.9);
                     existsBigAdv = true;
                 } else if (!existsBigAdv && getEqualityLimit(variantScore, scoreMax)) {
                     bestVariants.add(variant);
@@ -85,7 +88,7 @@ public class ScoreServiceImpl implements ScoreService {
                     bestVariants.add(variant);
                     variant.setScore(variantScore);
                 }
-                //System.out.println("Big adv: "+bigAdv+" Big error"+bigError+" Score: "+variantScore);
+                //System.out.println("Big adv: "+bigAdv+", Score: "+variantScore);
 
             }
         }
@@ -102,14 +105,16 @@ public class ScoreServiceImpl implements ScoreService {
             for (int i = indexOfMove; i < depthToLook; i += 2) {
                 avgColor1 += moves.get(i).getScore();
                 movesCount++;
-                bigError = getBigImpact(moves.get(i).getMetadata());
+                if(bigError)
+                    bigError = getBigImpact(moves.get(i).getMetadata());
             }
             avgColor1 /= movesCount;
             movesCount = 0;
             for (int i = indexOfMove + 1; i < depthToLook; i += 2) {
                 avgColor2 += moves.get(i).getScore();
                 movesCount++;
-                bigAdv = getBigImpact(moves.get(i).getMetadata());
+                if(!bigAdv)
+                    bigAdv = getBigImpact(moves.get(i).getMetadata());
             }
             avgColor2 /= movesCount;
             variantScore = avgColor1 - avgColor2;
@@ -121,7 +126,7 @@ public class ScoreServiceImpl implements ScoreService {
                 ultima = moves.get(moves.size() - 1);
             }
 
-            if (ultima.getScore() >= 1) {
+            if (ultima.getScore() >= 0.99) {
                 if (!checkMate) {
                     bestVariants.clear();
                 }
@@ -136,7 +141,7 @@ public class ScoreServiceImpl implements ScoreService {
                         bestVariants.clear();
                         bestVariants.add(mainVariant);
                     }
-                    mainVariant.setScore(variantScore);
+                    mainVariant.setScore(0.9);
                     existsBigAdv = true;
                 } else if (!existsBigAdv && getEqualityLimit(variantScore, scoreMax)) {
                     bestVariants.add(mainVariant);
@@ -168,6 +173,7 @@ public class ScoreServiceImpl implements ScoreService {
     private boolean getBigImpact(List<Metadata> meta) {
         for (int i = 0; i < meta.size(); ++i) {
             if (meta.get(i).getKey().equals("PreCheckMate")) {
+                System.out.println(meta.get(i).getKey());
                 return true;
             }
         }
