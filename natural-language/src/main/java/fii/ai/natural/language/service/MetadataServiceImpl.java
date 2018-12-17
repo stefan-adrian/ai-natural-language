@@ -2,6 +2,7 @@ package fii.ai.natural.language.service;
 
 import com.github.bhlangonijr.chesslib.*;
 import com.github.bhlangonijr.chesslib.move.Move;
+import fii.ai.natural.language.exception.InvalidMoveException;
 import fii.ai.natural.language.model.*;
 import fii.ai.natural.language.model.metadata.*;
 import fii.ai.natural.language.utils.ScoreInfo;
@@ -97,6 +98,9 @@ public class MetadataServiceImpl implements MetadataService {
 
     private void updatePieceNameMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
         Piece piece = board.getPiece(move.getFrom());
+        if (piece.value().equals("NONE")) {
+            throw new InvalidMoveException();
+        }
         String pieceName = piece.value().split("_")[1];
         pieceName = pieceName.substring(0, 1).toUpperCase() + pieceName.substring(1).toLowerCase();
         nodeMetadata.add(new PieceNameMetadata(pieceName));
@@ -187,7 +191,7 @@ public class MetadataServiceImpl implements MetadataService {
 
     private void updateCastlingMetadata(Board board, Move move, List<Metadata> nodeMetadata) {
 
-        Side side=board.getSideToMove();
+        Side side = board.getSideToMove();
         Board after = board.clone();
         after.doMove(move);
         CastleRight castleRight = after.getCastleRight(side);

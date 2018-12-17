@@ -173,7 +173,6 @@ public class ScoreServiceImpl implements ScoreService {
     private boolean getBigImpact(List<Metadata> meta) {
         for (int i = 0; i < meta.size(); ++i) {
             if (meta.get(i).getKey().equals("PreCheckMate")) {
-                System.out.println(meta.get(i).getKey());
                 return true;
             }
         }
