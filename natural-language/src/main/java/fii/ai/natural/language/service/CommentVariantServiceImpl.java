@@ -23,6 +23,12 @@ public class CommentVariantServiceImpl implements CommentVariantService {
     @Override
     public void commentMoveVariant(MoveVariant moveVariant) {
         moveVariant.getComments().add("Algorithm used for this moves is " + moveVariant.getAlgorithmName() + " with strategies " + moveVariant.getStrategyNames()+". ");
+        String moves = "";
+        for (Node node : moveVariant.getMoves()) {
+            moves += node.getMove();
+            moves += " ";
+        }
+        moveVariant.getComments().add("The moves given by this algorithm are "+moves+" and the following things will happen with this moves: ");
         commentPiecesTaken(moveVariant);
         commentPreCheckMate(moveVariant);
         commentPromoteToPiece(moveVariant);
